@@ -1,5 +1,6 @@
 ﻿@{
     ViewBag.Title = "Home Page";
+    var myControl = WebSharper.AspNetMvc.ScriptManager.Register(new WebSharperApplication.Controls.EntryPoint());
 }
 
 <div class="jumbotron">
@@ -12,6 +13,7 @@
         <h2>Overview</h2>
         <p>SharePoint introduces a Cloud App Model that enables you to create apps. Learn what apps for SharePoint are, why you should build them, and the concepts that are fundamental to building them for SharePoint.</p>
         <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkID=294439">Learn more &raquo;</a></p>
+        <p>@myControl</p>
     </div>
     <div class="col-md-4">
         <h2>Samples</h2>

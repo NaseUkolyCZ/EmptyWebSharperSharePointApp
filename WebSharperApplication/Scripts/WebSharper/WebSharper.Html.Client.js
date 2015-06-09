@@ -77,14 +77,21 @@
      DeprecatedTagBuilder:Runtime.Class({
       NewTag:function(name,children)
       {
-       var el,enumerator,pl;
+       var el,enumerator,_,pl;
        el=Element.New(this.HtmlProvider,name);
        enumerator=Enumerator.Get(children);
-       while(enumerator.MoveNext())
-        {
-         pl=enumerator.get_Current();
-         el.AppendI(pl);
-        }
+       try
+       {
+        while(enumerator.MoveNext())
+         {
+          pl=enumerator.get_Current();
+          el.AppendI(pl);
+         }
+       }
+       finally
+       {
+        enumerator.Dispose!=undefined?enumerator.Dispose():null;
+       }
        return el;
       }
      },{
@@ -477,7 +484,7 @@
        GetProperty:function(node,name)
        {
         var x;
-        x=jQuery(node).attr(name);
+        x=jQuery(node).prop(name);
         return x;
        },
        GetText:function(node)
@@ -580,13 +587,20 @@
       },
       add:function(el,inner)
       {
-       var enumerator,pl;
+       var enumerator,_,pl;
        enumerator=Enumerator.Get(inner);
-       while(enumerator.MoveNext())
-        {
-         pl=enumerator.get_Current();
-         el.AppendI(pl);
-        }
+       try
+       {
+        while(enumerator.MoveNext())
+         {
+          pl=enumerator.get_Current();
+          el.AppendI(pl);
+         }
+       }
+       finally
+       {
+        enumerator.Dispose!=undefined?enumerator.Dispose():null;
+       }
        return el;
       }
      },
@@ -617,14 +631,21 @@
      TagBuilder:Runtime.Class({
       NewTag:function(name,children)
       {
-       var el,enumerator,pl;
+       var el,enumerator,_,pl;
        el=Element.New(this.HtmlProvider,name);
        enumerator=Enumerator.Get(children);
-       while(enumerator.MoveNext())
-        {
-         pl=enumerator.get_Current();
-         el.AppendI(pl);
-        }
+       try
+       {
+        while(enumerator.MoveNext())
+         {
+          pl=enumerator.get_Current();
+          el.AppendI(pl);
+         }
+       }
+       finally
+       {
+        enumerator.Dispose!=undefined?enumerator.Dispose():null;
+       }
        return el;
       },
       text:function(data)

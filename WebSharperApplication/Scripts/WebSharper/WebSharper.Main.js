@@ -1,13 +1,26 @@
 (function()
 {
- var Global=this,Runtime=this.IntelliFactory.Runtime,Number,Arrays,Operators,Error,Array,Seq,Unchecked,Enumerator,Arrays2D,Concurrency,AggregateException,Option,clearTimeout,setTimeout,CancellationTokenSource,Char,Util,Lazy,Date,console,Scheduler,T,Html,Client,Activator,document,jQuery,Json,JSON,JavaScript,JSModule,HtmlContentExtensions,SingleNode,List,T1,Math,Strings,PrintfHelpers,Remoting,XhrProvider,AsyncProxy,AjaxRemotingProvider,window,Enumerable,String,RegExp;
+ var Global=this,Runtime=this.IntelliFactory.Runtime,AggregateException,Exception,ArgumentException,Number,Arrays,Operators,IndexOutOfRangeException,Array,Seq,Unchecked,Enumerator,Arrays2D,Concurrency,Option,clearTimeout,setTimeout,CancellationTokenSource,Char,Util,Lazy,OperationCanceledException,Date,console,Scheduler,T,Html,Client,Activator,document,jQuery,Json,JSON,JavaScript,JSModule,HtmlContentExtensions,SingleNode,InvalidOperationException,List,T1,MatchFailureException,Math,Strings,PrintfHelpers,Remoting,XhrProvider,AsyncProxy,AjaxRemotingProvider,window,Enumerable,Ref,String,RegExp;
  Runtime.Define(Global,{
   WebSharper:{
    AggregateException:Runtime.Class({},{
-    New:function($innerExceptions)
+    New:function(innerExceptions)
     {
-     var $0=this,$this=this;
-     return Global.e=new Global.Error("AggregateException"),Global.e.InnerExceptions=$innerExceptions,Global.e;
+     return Runtime.New(this,AggregateException.New1("One or more errors occurred.",innerExceptions));
+    },
+    New1:function(message)
+    {
+     return Runtime.New(this,Exception.New1(message));
+    }
+   }),
+   ArgumentException:Runtime.Class({},{
+    New:function()
+    {
+     return Runtime.New(this,ArgumentException.New1("Value does not fall within the expected range."));
+    },
+    New1:function(message)
+    {
+     return Runtime.New(this,Exception.New1(message));
     }
    }),
    Arrays:{
@@ -35,7 +48,7 @@
     },
     checkBounds2D:function(arr,n1,n2)
     {
-     return(((n1<0?true:n2<0)?true:n1>=arr.length)?true:n2>=(arr.length?arr[0].length:0))?Operators.Raise(new Error("IndexOutOfRangeException")):null;
+     return(((n1<0?true:n2<0)?true:n1>=arr.length)?true:n2>=(arr.length?arr[0].length:0))?Operators.Raise(IndexOutOfRangeException.New()):null;
     },
     checkLength:function(arr1,arr2)
     {
@@ -334,14 +347,22 @@
     },
     ofSeq:function(xs)
     {
-     var q,_enum;
+     var q,_enum,_;
      q=[];
      _enum=Enumerator.Get(xs);
-     while(_enum.MoveNext())
-      {
-       q.push(_enum.get_Current());
-      }
-     return q;
+     try
+     {
+      while(_enum.MoveNext())
+       {
+        q.push(_enum.get_Current());
+       }
+      _=q;
+     }
+     finally
+     {
+      _enum.Dispose!=undefined?_enum.Dispose():null;
+     }
+     return _;
     },
     partition:function(f,arr)
     {
@@ -715,7 +736,7 @@
     },
     get_DefaultCancellationToken:function()
     {
-     return Concurrency.defCTS().contents;
+     return(Concurrency.defCTS())[0];
     }
    }),
    CancellationTokenSource:Runtime.Class({
@@ -821,14 +842,13 @@
      cts=CancellationTokenSource.New();
      action=function(t)
      {
-      var callback,value;
-      callback=function()
-      {
-       return cts.Cancel();
-      };
+      var value;
       value=Concurrency.Register(t,function()
       {
-       return callback();
+       return function()
+       {
+        return cts.Cancel();
+       }();
       });
       return;
      };
@@ -920,7 +940,7 @@
         {
          return c.k.call(null,{
           $:2,
-          $0:new Error("OperationCanceledException")
+          $0:OperationCanceledException.New()
          });
         };
         return Concurrency.scheduler().Fork(action);
@@ -1068,15 +1088,16 @@
     },
     For:function(s,b)
     {
-     var ie;
-     ie=Enumerator.Get(s);
-     return Concurrency.While(function()
+     return Concurrency.Using(Enumerator.Get(s),function(ie)
      {
-      return ie.MoveNext();
-     },Concurrency.Delay(function()
-     {
-      return b(ie.get_Current());
-     }));
+      return Concurrency.While(function()
+      {
+       return ie.MoveNext();
+      },Concurrency.Delay(function()
+      {
+       return b(ie.get_Current());
+      }));
+     });
     },
     FromContinuations:function(subscribe)
     {
@@ -1084,19 +1105,17 @@
      r=function(c)
      {
       var continued,once;
-      continued={
-       contents:false
-      };
+      continued=[false];
       once=function(cont)
       {
        var _;
-       if(continued.contents)
+       if(continued[0])
         {
          _=Operators.FailWith("A continuation provided by Async.FromContinuations was invoked multiple times");
         }
        else
         {
-         continued.contents=true;
+         continued[0]=true;
          _=Concurrency.scheduler().Fork(cont);
         }
        return _;
@@ -1177,16 +1196,14 @@
        {
         var n,o,a,accept;
         n=cs1.length;
-        o={
-         contents:n
-        };
+        o=[n];
         a=Arrays.create(n,undefined);
         accept=function(i)
         {
          return function(x)
          {
           var matchValue,_1,_2,x1,res,_3,x2,n1,res1;
-          matchValue=[o.contents,x];
+          matchValue=[o[0],x];
           if(matchValue[0]===0)
            {
             _1=null;
@@ -1199,7 +1216,7 @@
                {
                 x1=matchValue[1].$0;
                 Arrays.set(a,i,x1);
-                o.contents=0;
+                o[0]=0;
                 _2=c.k.call(null,{
                  $:0,
                  $0:a
@@ -1209,7 +1226,7 @@
                {
                 matchValue[0];
                 res=matchValue[1];
-                o.contents=0;
+                o[0]=0;
                 _2=c.k.call(null,res);
                }
               _1=_2;
@@ -1221,13 +1238,13 @@
                 x2=matchValue[1].$0;
                 n1=matchValue[0];
                 Arrays.set(a,i,x2);
-                _3=void(o.contents=n1-1);
+                _3=void(o[0]=n1-1);
                }
               else
                {
                 matchValue[0];
                 res1=matchValue[1];
-                o.contents=0;
+                o[0]=0;
                 _3=c.k.call(null,res1);
                }
               _1=_3;
@@ -1377,7 +1394,7 @@
         {
          return c.k.call(null,{
           $:2,
-          $0:new Error("OperationCanceledException")
+          $0:OperationCanceledException.New()
          });
         };
         return Concurrency.scheduler().Fork(action);
@@ -1409,18 +1426,16 @@
      r1=function(c)
      {
       var cached,queue,action,r2,r21;
-      cached={
-       contents:{
-        $:0
-       }
-      };
+      cached=[{
+       $:0
+      }];
       queue=[];
       action=function()
       {
        return r({
         k:function(res)
         {
-         cached.contents={
+         cached[0]={
           $:1,
           $0:res
          };
@@ -1437,7 +1452,7 @@
       r2=function(c2)
       {
        var matchValue,_,x;
-       matchValue=cached.contents;
+       matchValue=cached[0];
        if(matchValue.$==0)
         {
          _=queue.push(c2.k);
@@ -1460,7 +1475,7 @@
     StartWithContinuations:function(c,s,f,cc,ctOpt)
     {
      var ct,action;
-     ct=Operators.DefaultArg(ctOpt,Concurrency.defCTS().contents);
+     ct=Operators.DefaultArg(ctOpt,(Concurrency.defCTS())[0]);
      action=function()
      {
       return c({
@@ -1610,15 +1625,13 @@
      {
       return c.ct.c?c.k.call(null,{
        $:2,
-       $0:new Error("OperationCanceledException")
+       $0:OperationCanceledException.New()
       }):r(c);
      };
     },
     defCTS:Runtime.Field(function()
     {
-     return{
-      contents:CancellationTokenSource.New()
-     };
+     return[CancellationTokenSource.New()];
     }),
     scheduler:Runtime.Field(function()
     {
@@ -1689,62 +1702,47 @@
    Enumerator:{
     Get:function(x)
     {
-     var _,next,_2,next1;
-     if(x instanceof Global.Array)
-      {
-       next=function(e)
+     return x instanceof Global.Array?T.New(0,null,function(e)
+     {
+      var i,_;
+      i=e.s;
+      if(i<Arrays.length(x))
        {
-        var i,_1,v,v1;
-        i=e.s;
-        if(i<Arrays.length(x))
-         {
-          v=Arrays.get(x,i);
-          e.c=v;
-          v1=i+1;
-          e.s=v1;
-          _1=true;
-         }
-        else
-         {
-          _1=false;
-         }
-        return _1;
-       };
-       _=T.New(0,null,next);
-      }
-     else
-      {
-       if(Unchecked.Equals(typeof x,"string"))
-        {
-         next1=function(e)
-         {
-          var i,_1,v,v1;
-          i=e.s;
-          if(i<x.length)
-           {
-            v=x.charCodeAt(i);
-            e.c=v;
-            v1=i+1;
-            e.s=v1;
-            _1=true;
-           }
-          else
-           {
-            _1=false;
-           }
-          return _1;
-         };
-         _2=T.New(0,null,next1);
-        }
-       else
-        {
-         _2=x.GetEnumerator();
-        }
-       _=_2;
-      }
-     return _;
+        e.c=Arrays.get(x,i);
+        e.s=i+1;
+        _=true;
+       }
+      else
+       {
+        _=false;
+       }
+      return _;
+     },function()
+     {
+     }):Unchecked.Equals(typeof x,"string")?T.New(0,null,function(e)
+     {
+      var i,_;
+      i=e.s;
+      if(i<x.length)
+       {
+        e.c=x.charCodeAt(i);
+        e.s=i+1;
+        _=true;
+       }
+      else
+       {
+        _=false;
+       }
+      return _;
+     },function()
+     {
+     }):x.GetEnumerator();
     },
     T:Runtime.Class({
+     Dispose:function()
+     {
+      return this.d.call(null,this);
+     },
      MoveNext:function()
      {
       return this.n.call(null,this);
@@ -1754,17 +1752,29 @@
       return this.c;
      }
     },{
-     New:function(s,c,n)
+     New:function(s,c,n,d)
      {
       var r;
       r=Runtime.New(this,{});
       r.s=s;
       r.c=c;
       r.n=n;
+      r.d=d;
       return r;
      }
     })
    },
+   Exception:Runtime.Class({},{
+    New:function()
+    {
+     return Runtime.New(this,Exception.New1("Exception of type 'System.Exception' was thrown."));
+    },
+    New1:function($message)
+    {
+     var $0=this,$this=this;
+     return new Global.Error($message);
+    }
+   }),
    Guid:Runtime.Class({},{
     NewGuid:function()
     {
@@ -1839,6 +1849,26 @@
      }
     }
    },
+   IndexOutOfRangeException:Runtime.Class({},{
+    New:function()
+    {
+     return Runtime.New(this,IndexOutOfRangeException.New1("Index was outside the bounds of the array."));
+    },
+    New1:function(message)
+    {
+     return Runtime.New(this,Exception.New1(message));
+    }
+   }),
+   InvalidOperationException:Runtime.Class({},{
+    New:function()
+    {
+     return Runtime.New(this,InvalidOperationException.New1("Operation is not valid due to the current state of the object."));
+    },
+    New1:function(message)
+    {
+     return Runtime.New(this,Exception.New1(message));
+    }
+   }),
    JavaScript:{
     JSModule:{
      Delete:function($x,$field)
@@ -1891,16 +1921,23 @@
     Pervasives:{
      NewFromList:function(fields)
      {
-      var r,enumerator,forLoopVar,v,k;
+      var r,enumerator,_,forLoopVar,v,k;
       r={};
       enumerator=Enumerator.Get(fields);
-      while(enumerator.MoveNext())
-       {
-        forLoopVar=enumerator.get_Current();
-        v=forLoopVar[1];
-        k=forLoopVar[0];
-        r[k]=v;
-       }
+      try
+      {
+       while(enumerator.MoveNext())
+        {
+         forLoopVar=enumerator.get_Current();
+         v=forLoopVar[1];
+         k=forLoopVar[0];
+         r[k]=v;
+        }
+      }
+      finally
+      {
+       enumerator.Dispose!=undefined?enumerator.Dispose():null;
+      }
       return r;
      }
     }
@@ -1915,7 +1952,7 @@
      }
      decode=function(x)
      {
-      var _,matchValue,_1,_2,o,ti;
+      var _,matchValue,_1,_2,o,ti,_3,r;
       if(Unchecked.Equals(x,null))
        {
         _=x;
@@ -1933,7 +1970,21 @@
            {
             o=Json.shallowMap(decode,x.$V);
             ti=x.$T;
-            _2=Unchecked.Equals(typeof ti,"undefined")?o:Json.restore(Arrays.get(types,ti),o);
+            if(Unchecked.Equals(typeof ti,"undefined"))
+             {
+              _3=o;
+             }
+            else
+             {
+              r=new(Arrays.get(types,ti))();
+              JSModule.ForEach(o,function(k)
+              {
+               r[k]=o[k];
+               return false;
+              });
+              _3=r;
+             }
+            _2=_3;
            }
           _1=_2;
          }
@@ -1967,17 +2018,6 @@
          _=Operators.FailWith("Invalid server reply. Failed to find type: "+n);
         }
       }
-     return r;
-    },
-    restore:function(ty,obj)
-    {
-     var r;
-     r=new ty();
-     JSModule.ForEach(obj,function(k)
-     {
-      r[k]=obj[k];
-      return false;
-     });
      return r;
     },
     shallowMap:function(f,x)
@@ -2060,8 +2100,7 @@
     T:Runtime.Class({
      GetEnumerator:function()
      {
-      var next;
-      next=function(e)
+      return T.New(this,null,function(e)
       {
        var matchValue,_,xs,x;
        matchValue=e.s;
@@ -2078,8 +2117,9 @@
          _=true;
         }
        return _;
-      };
-      return T.New(this,null,next);
+      },function()
+      {
+      });
      },
      get_Item:function(x)
      {
@@ -2256,16 +2296,24 @@
     },
     ofSeq:function(s)
     {
-     var r,e,x;
+     var r,e,_,x;
      r=[];
      e=Enumerator.Get(s);
-     while(e.MoveNext())
-      {
-       r.unshift(e.get_Current());
-      }
-     x=r.slice(0);
-     x.reverse();
-     return List.ofArray(x);
+     try
+     {
+      while(e.MoveNext())
+       {
+        r.unshift(e.get_Current());
+       }
+      x=r.slice(0);
+      x.reverse();
+      _=List.ofArray(x);
+     }
+     finally
+     {
+      e.Dispose!=undefined?e.Dispose():null;
+     }
+     return _;
     },
     partition:function(p,l)
     {
@@ -2342,37 +2390,51 @@
     },
     unzip:function(l)
     {
-     var x,y,enumerator,forLoopVar,b,a;
+     var x,y,enumerator,_,forLoopVar,b,a;
      x=[];
      y=[];
      enumerator=Enumerator.Get(l);
-     while(enumerator.MoveNext())
-      {
-       forLoopVar=enumerator.get_Current();
-       b=forLoopVar[1];
-       a=forLoopVar[0];
-       x.push(a);
-       y.push(b);
-      }
+     try
+     {
+      while(enumerator.MoveNext())
+       {
+        forLoopVar=enumerator.get_Current();
+        b=forLoopVar[1];
+        a=forLoopVar[0];
+        x.push(a);
+        y.push(b);
+       }
+     }
+     finally
+     {
+      enumerator.Dispose!=undefined?enumerator.Dispose():null;
+     }
      return[List.ofArray(x.slice(0)),List.ofArray(y.slice(0))];
     },
     unzip3:function(l)
     {
-     var x,y,z,enumerator,forLoopVar,c,b,a;
+     var x,y,z,enumerator,_,forLoopVar,c,b,a;
      x=[];
      y=[];
      z=[];
      enumerator=Enumerator.Get(l);
-     while(enumerator.MoveNext())
-      {
-       forLoopVar=enumerator.get_Current();
-       c=forLoopVar[2];
-       b=forLoopVar[1];
-       a=forLoopVar[0];
-       x.push(a);
-       y.push(b);
-       z.push(c);
-      }
+     try
+     {
+      while(enumerator.MoveNext())
+       {
+        forLoopVar=enumerator.get_Current();
+        c=forLoopVar[2];
+        b=forLoopVar[1];
+        a=forLoopVar[0];
+        x.push(a);
+        y.push(b);
+        z.push(c);
+       }
+     }
+     finally
+     {
+      enumerator.Dispose!=undefined?enumerator.Dispose():null;
+     }
      return[List.ofArray(x.slice(0)),List.ofArray(y.slice(0)),List.ofArray(z.slice(0))];
     },
     zip:function(l1,l2)
@@ -2384,14 +2446,26 @@
      return List.ofArray(Arrays.zip3(Arrays.ofSeq(l1),Arrays.ofSeq(l2),Arrays.ofSeq(l3)));
     }
    },
+   MatchFailureException:Runtime.Class({},{
+    New:function(message,line,column)
+    {
+     return Runtime.New(this,Exception.New1(message+" at "+Global.String(line)+":"+Global.String(column)));
+    }
+   }),
+   OperationCanceledException:Runtime.Class({},{
+    New:function()
+    {
+     return Runtime.New(this,OperationCanceledException.New1("The operation was canceled."));
+    },
+    New1:function(message)
+    {
+     return Runtime.New(this,Exception.New1(message));
+    }
+   }),
    Operators:{
     Compare:function(a,b)
     {
      return Unchecked.Compare(a,b);
-    },
-    Decrement:function(x)
-    {
-     x.contents=x.contents-1;
     },
     DefaultArg:function(x,d)
     {
@@ -2409,11 +2483,7 @@
     },
     FailWith:function(msg)
     {
-     return Operators.Raise(new Error(msg));
-    },
-    Increment:function(x)
-    {
-     x.contents=x.contents+1;
+     return Operators.Raise(Exception.New1(msg));
     },
     KeyValue:function(kvp)
     {
@@ -2643,25 +2713,11 @@
    PrintfHelpers:{
     padNumLeft:function(s,l)
     {
-     var f,_,_this,i;
+     var f;
      f=Arrays.get(s,0);
-     if((f===" "?true:f==="+")?true:f==="-")
-      {
-       _this=s.substr(1);
-       i=l-1;
-       _=f+Strings.PadLeftWith(_this,i,48);
-      }
-     else
-      {
-       _=Strings.PadLeftWith(s,l,48);
-      }
-     return _;
+     return((f===" "?true:f==="+")?true:f==="-")?f+Strings.PadLeftWith(s.substr(1),l-1,48):Strings.PadLeftWith(s,l,48);
     },
     plusForPos:function(n,s)
-    {
-     return 0<=n?"+"+s:s;
-    },
-    plusForPos0:function(n,s)
     {
      return 0<=n?"+"+s:s;
     },
@@ -2820,6 +2876,18 @@
      return Runtime.New(this,{});
     }
    }),
+   Ref:{
+    decr:function($x)
+    {
+     var $0=this,$this=this;
+     return void($x[0]--);
+    },
+    incr:function($x)
+    {
+     var $0=this,$this=this;
+     return void($x[0]++);
+    }
+   },
    Remoting:{
     AjaxProvider:Runtime.Field(function()
     {
@@ -2828,49 +2896,45 @@
     AjaxRemotingProvider:Runtime.Class({},{
      Async:function(m,data)
      {
-      var headers,payload,f;
+      var headers,payload;
       headers=Remoting.makeHeaders(m);
       payload=Remoting.makePayload(data);
-      f=function()
+      return Concurrency.Delay(function()
       {
-       var x,f1;
+       var x;
        x=AsyncProxy.get_CancellationToken();
-       f1=function(_arg1)
+       return Concurrency.Bind(x,function(_arg1)
        {
-        var callback,x2;
-        callback=function(tupledArg)
+        return Concurrency.FromContinuations(function(tupledArg)
         {
-         var ok,err,cc,waiting,callback1,reg,ok1,err1,arg00;
+         var ok,err,cc,waiting,reg,ok1,err1,arg00;
          ok=tupledArg[0];
          err=tupledArg[1];
          cc=tupledArg[2];
-         waiting={
-          contents:true
-         };
-         callback1=function()
-         {
-          var _;
-          if(waiting.contents)
-           {
-            waiting.contents=false;
-            _=cc(new Error("OperationCanceledException"));
-           }
-          else
-           {
-            _=null;
-           }
-          return _;
-         };
+         waiting=[true];
          reg=Concurrency.Register(_arg1,function()
          {
-          return callback1();
+          return function()
+          {
+           var _;
+           if(waiting[0])
+            {
+             waiting[0]=false;
+             _=cc(OperationCanceledException.New());
+            }
+           else
+            {
+             _=null;
+            }
+           return _;
+          }();
          });
          ok1=function(x1)
          {
           var _;
-          if(waiting.contents)
+          if(waiting[0])
            {
-            waiting.contents=false;
+            waiting[0]=false;
             reg.Dispose();
             _=ok(Json.Activate(JSON.parse(x1)));
            }
@@ -2883,9 +2947,9 @@
          err1=function(e)
          {
           var _;
-          if(waiting.contents)
+          if(waiting[0])
            {
-            waiting.contents=false;
+            waiting[0]=false;
             reg.Dispose();
             _=err(e);
            }
@@ -2897,23 +2961,15 @@
          };
          arg00=Remoting.EndPoint();
          return Remoting.AjaxProvider().Async(arg00,headers,payload,ok1,err1);
-        };
-        x2=Concurrency.FromContinuations(callback);
-        return x2;
-       };
-       return Concurrency.Bind(x,f1);
-      };
-      return Concurrency.Delay(f);
+        });
+       });
+      });
      },
      Send:function(m,data)
      {
-      var computation,computation1,t;
-      computation=AjaxRemotingProvider.Async(m,data);
-      computation1=Concurrency.Ignore(computation);
-      t={
+      return Concurrency.Start(Concurrency.Ignore(AjaxRemotingProvider.Async(m,data)),{
        $:0
-      };
-      return Concurrency.Start(computation1,t);
+      });
      },
      Sync:function(m,data)
      {
@@ -2931,14 +2987,12 @@
     }),
     UseHttps:function()
     {
-     var _,_this,_1,_this1,_2,matchValue;
+     var _,_1,_2,matchValue;
      try
      {
-      _this=window.location.href;
-      if(!Strings.StartsWith(_this,"https://"))
+      if(!Strings.StartsWith(window.location.href,"https://"))
        {
-        _this1=window.location.href;
-        _2=Strings.Replace(_this1,"http://","https://");
+        _2=Strings.Replace(window.location.href,"http://","https://");
         Remoting.EndPoint=function()
         {
          return _2;
@@ -2965,17 +3019,15 @@
      Sync:function(url,headers,data)
      {
       var res;
-      res={
-       contents:undefined
-      };
+      res=[undefined];
       Remoting.ajax(false,url,headers,data,function(x)
       {
-       res.contents=x;
+       res[0]=x;
       },function(e)
       {
        return Operators.Raise(e);
       });
-      return res.contents;
+      return res[0];
      }
     },{
      New:function()
@@ -3041,31 +3093,35 @@
     {
      return Enumerable.Of(function()
      {
-      var e1,next;
+      var e1,first;
       e1=Enumerator.Get(s1);
-      next=function(x)
+      first=[true];
+      return T.New(e1,null,function(x)
       {
-       var _,v,_1,e2,_2,v1;
+       var _,x1,_1,_2;
        if(x.s.MoveNext())
         {
-         v=x.s.get_Current();
-         x.c=v;
+         x.c=x.s.get_Current();
          _=true;
         }
        else
         {
-         if(x.s===e1)
+         x1=x.s;
+         !Unchecked.Equals(x1,null)?x1.Dispose():null;
+         x.s=null;
+         if(first[0])
           {
-           e2=Enumerator.Get(s2);
-           x.s=e2;
-           if(e2.MoveNext())
+           first[0]=false;
+           x.s=Enumerator.Get(s2);
+           if(x.s.MoveNext())
             {
-             v1=e2.get_Current();
-             x.c=v1;
+             x.c=x.s.get_Current();
              _2=true;
             }
            else
             {
+             x.s.Dispose();
+             x.s=null;
              _2=false;
             }
            _1=_2;
@@ -3077,8 +3133,12 @@
          _=_1;
         }
        return _;
-      };
-      return T.New(e1,null,next);
+      },function(x)
+      {
+       var x1;
+       x1=x.s;
+       return!Unchecked.Equals(x1,null)?x1.Dispose():null;
+      });
      });
     },
     average:function(s)
@@ -3119,41 +3179,50 @@
     {
      var cache,_enum,getEnumerator;
      cache=[];
-     _enum=Enumerator.Get(s);
+     _enum=[Enumerator.Get(s)];
      getEnumerator=function()
      {
       var next;
       next=function(e)
       {
-       var _,v,v1,_1,v2,v3;
+       var _,en,_1,_2;
        if(e.s+1<cache.length)
         {
-         v=e.s+1;
-         e.s=v;
-         v1=cache[e.s];
-         e.c=v1;
+         e.s=e.s+1;
+         e.c=cache[e.s];
          _=true;
         }
        else
         {
-         if(_enum.MoveNext())
+         en=_enum[0];
+         if(Unchecked.Equals(en,null))
           {
-           v2=e.s+1;
-           e.s=v2;
-           v3=_enum.get_Current();
-           e.c=v3;
-           cache.push(e.get_Current());
-           _1=true;
+           _1=false;
           }
          else
           {
-           _1=false;
+           if(en.MoveNext())
+            {
+             e.s=e.s+1;
+             e.c=en.get_Current();
+             cache.push(e.get_Current());
+             _2=true;
+            }
+           else
+            {
+             en.Dispose();
+             _enum[0]=null;
+             _2=false;
+            }
+           _1=_2;
           }
          _=_1;
         }
        return _;
       };
-      return T.New(0,null,next);
+      return T.New(0,null,next,function()
+      {
+      });
      };
      return Enumerable.Of(getEnumerator);
     },
@@ -3185,17 +3254,33 @@
     },
     compareWith:function(f,s1,s2)
     {
-     var e1,e2,r,loop,matchValue;
+     var e1,_,e2,_1,r,loop,matchValue;
      e1=Enumerator.Get(s1);
-     e2=Enumerator.Get(s2);
-     r=0;
-     loop=true;
-     while(loop?r===0:false)
+     try
+     {
+      e2=Enumerator.Get(s2);
+      try
       {
-       matchValue=[e1.MoveNext(),e2.MoveNext()];
-       matchValue[0]?matchValue[1]?r=(f(e1.get_Current()))(e2.get_Current()):r=1:matchValue[1]?r=-1:loop=false;
+       r=0;
+       loop=true;
+       while(loop?r===0:false)
+        {
+         matchValue=[e1.MoveNext(),e2.MoveNext()];
+         matchValue[0]?matchValue[1]?r=(f(e1.get_Current()))(e2.get_Current()):r=1:matchValue[1]?r=-1:loop=false;
+        }
+       _1=r;
       }
-     return r;
+      finally
+      {
+       e2.Dispose!=undefined?e2.Dispose():null;
+      }
+      _=_1;
+     }
+     finally
+     {
+      e1.Dispose!=undefined?e1.Dispose():null;
+     }
+     return _;
     },
     concat:function(ss)
     {
@@ -3205,18 +3290,18 @@
       outerE=Enumerator.Get(ss);
       next=function(st)
       {
-       var matchValue,_,_1,v,_2,v1;
+       var matchValue,_,_1,_2;
        matchValue=st.s;
        if(Unchecked.Equals(matchValue,null))
         {
          if(outerE.MoveNext())
           {
-           v=Enumerator.Get(outerE.get_Current());
-           st.s=v;
+           st.s=Enumerator.Get(outerE.get_Current());
            _1=next(st);
           }
          else
           {
+           outerE.Dispose();
            _1=false;
           }
          _=_1;
@@ -3225,12 +3310,12 @@
         {
          if(matchValue.MoveNext())
           {
-           v1=matchValue.get_Current();
-           st.c=v1;
+           st.c=matchValue.get_Current();
            _2=true;
           }
          else
           {
+           st.Dispose();
            st.s=null;
            _2=next(st);
           }
@@ -3238,7 +3323,13 @@
         }
        return _;
       };
-      return T.New(null,null,next);
+      return T.New(null,null,next,function(st)
+      {
+       var x;
+       x=st.s;
+       !Unchecked.Equals(x,null)?x.Dispose():null;
+       return!Unchecked.Equals(outerE,null)?outerE.Dispose():null;
+      });
      });
     },
     countBy:function(f,s)
@@ -3246,31 +3337,39 @@
      var generator;
      generator=function()
      {
-      var d,e,keys,k,h,_,mapping,array,x;
+      var d,e,_,keys,k,h,_1,mapping,array,x;
       d={};
       e=Enumerator.Get(s);
-      keys=[];
-      while(e.MoveNext())
-       {
-        k=f(e.get_Current());
-        h=Unchecked.Hash(k);
-        if(d.hasOwnProperty(h))
-         {
-          _=void(d[h]=d[h]+1);
-         }
-        else
-         {
-          keys.push(k);
-          _=void(d[h]=1);
-         }
-       }
-      mapping=function(k1)
+      try
       {
-       return[k1,d[Unchecked.Hash(k1)]];
-      };
-      array=keys.slice(0);
-      x=Arrays.map(mapping,array);
-      return x;
+       keys=[];
+       while(e.MoveNext())
+        {
+         k=f(e.get_Current());
+         h=Unchecked.Hash(k);
+         if(d.hasOwnProperty(h))
+          {
+           _1=void(d[h]=d[h]+1);
+          }
+         else
+          {
+           keys.push(k);
+           _1=void(d[h]=1);
+          }
+        }
+       mapping=function(k1)
+       {
+        return[k1,d[Unchecked.Hash(k1)]];
+       };
+       array=keys.slice(0);
+       x=Arrays.map(mapping,array);
+       _=x;
+      }
+      finally
+      {
+       e.Dispose!=undefined?e.Dispose():null;
+      }
+      return _;
      };
      return Seq.delay(generator);
     },
@@ -3293,20 +3392,22 @@
      var getEnumerator;
      getEnumerator=function()
      {
-      var _enum,seen,next;
+      var _enum,seen,dispose,next;
       _enum=Enumerator.Get(s);
       seen={};
+      dispose=function()
+      {
+       return _enum.Dispose();
+      };
       next=function(e)
       {
-       var _,cur,h,check,has,_1,v;
+       var _,cur,h,check,has,_1;
        if(_enum.MoveNext())
         {
          cur=_enum.get_Current();
          h=function(c)
          {
-          var x;
-          x=f(c);
-          return Unchecked.Hash(x);
+          return Unchecked.Hash(f(c));
          };
          check=function(c)
          {
@@ -3325,8 +3426,7 @@
          else
           {
            seen[h(cur)]=null;
-           v=cur;
-           e.c=v;
+           e.c=cur;
            _1=true;
           }
          _=_1;
@@ -3337,7 +3437,7 @@
         }
        return _;
       };
-      return T.New(null,null,next);
+      return T.New(null,null,next,dispose);
      };
      return Enumerable.Of(getEnumerator);
     },
@@ -3347,137 +3447,190 @@
     },
     enumFinally:function(s,f)
     {
-     return Enumerable.Of(function()
+     var getEnumerator;
+     getEnumerator=function()
      {
-      var e,_,e1,next;
+      var _enum,_,e,dispose,next;
       try
       {
        _=Enumerator.Get(s);
       }
-      catch(e1)
+      catch(e)
       {
        f(null);
-       _=Operators.Raise(e1);
+       _=Operators.Raise(e);
       }
-      e=_;
-      next=function(x)
+      _enum=_;
+      dispose=function()
       {
-       var _1,_2,v,e2;
-       try
-       {
-        if(e.MoveNext())
-         {
-          v=e.get_Current();
-          x.c=v;
-          _2=true;
-         }
-        else
-         {
-          f(null);
-          _2=false;
-         }
-        _1=_2;
-       }
-       catch(e2)
-       {
-        f(null);
-        _1=Operators.Raise(e2);
-       }
+       _enum.Dispose();
+       return f(null);
+      };
+      next=function(e1)
+      {
+       var _1;
+       if(_enum.MoveNext())
+        {
+         e1.c=_enum.get_Current();
+         _1=true;
+        }
+       else
+        {
+         _1=false;
+        }
        return _1;
       };
-      return T.New(null,null,next);
-     });
+      return T.New(null,null,next,dispose);
+     };
+     return Enumerable.Of(getEnumerator);
     },
     enumUsing:function(x,f)
     {
-     return f(x);
+     var getEnumerator;
+     getEnumerator=function()
+     {
+      var _enum,_,e,dispose,next;
+      try
+      {
+       _=Enumerator.Get(f(x));
+      }
+      catch(e)
+      {
+       x.Dispose();
+       _=Operators.Raise(e);
+      }
+      _enum=_;
+      dispose=function()
+      {
+       _enum.Dispose();
+       return x.Dispose();
+      };
+      next=function(e1)
+      {
+       var _1;
+       if(_enum.MoveNext())
+        {
+         e1.c=_enum.get_Current();
+         _1=true;
+        }
+       else
+        {
+         _1=false;
+        }
+       return _1;
+      };
+      return T.New(null,null,next,dispose);
+     };
+     return Enumerable.Of(getEnumerator);
     },
     enumWhile:function(f,s)
     {
      return Enumerable.Of(function()
      {
-      var next,state;
+      var next;
       next=function(en)
       {
-       var matchValue,_,e,_1,v,v1,_2,v2;
+       var matchValue,_,_1,_2;
        matchValue=en.s;
-       if(matchValue.$==1)
+       if(Unchecked.Equals(matchValue,null))
         {
-         e=matchValue.$0;
-         if(e.MoveNext())
+         if(f(null))
           {
-           v=e.get_Current();
-           en.c=v;
-           _1=true;
+           en.s=Enumerator.Get(s);
+           _1=next(en);
           }
          else
           {
-           v1={
-            $:0
-           };
-           en.s=v1;
-           _1=next(en);
+           _1=false;
           }
          _=_1;
         }
        else
         {
-         if(f(null))
+         if(matchValue.MoveNext())
           {
-           v2={
-            $:1,
-            $0:Enumerator.Get(s)
-           };
-           en.s=v2;
-           _2=next(en);
+           en.c=matchValue.get_Current();
+           _2=true;
           }
          else
           {
-           _2=false;
+           matchValue.Dispose();
+           en.s=null;
+           _2=next(en);
           }
          _=_2;
         }
        return _;
       };
-      state={
-       $:0
-      };
-      return T.New(state,null,next);
+      return T.New(null,null,next,function(en)
+      {
+       var x;
+       x=en.s;
+       return!Unchecked.Equals(x,null)?x.Dispose():null;
+      });
      });
     },
     exists:function(p,s)
     {
-     var e,r;
+     var e,_,r;
      e=Enumerator.Get(s);
-     r=false;
-     while(!r?e.MoveNext():false)
-      {
-       r=p(e.get_Current());
-      }
-     return r;
+     try
+     {
+      r=false;
+      while(!r?e.MoveNext():false)
+       {
+        r=p(e.get_Current());
+       }
+      _=r;
+     }
+     finally
+     {
+      e.Dispose!=undefined?e.Dispose():null;
+     }
+     return _;
     },
     exists2:function(p,s1,s2)
     {
-     var e1,e2,r;
+     var e1,_,e2,_1,r;
      e1=Enumerator.Get(s1);
-     e2=Enumerator.Get(s2);
-     r=false;
-     while((!r?e1.MoveNext():false)?e2.MoveNext():false)
+     try
+     {
+      e2=Enumerator.Get(s2);
+      try
       {
-       r=(p(e1.get_Current()))(e2.get_Current());
+       r=false;
+       while((!r?e1.MoveNext():false)?e2.MoveNext():false)
+        {
+         r=(p(e1.get_Current()))(e2.get_Current());
+        }
+       _1=r;
       }
-     return r;
+      finally
+      {
+       e2.Dispose!=undefined?e2.Dispose():null;
+      }
+      _=_1;
+     }
+     finally
+     {
+      e1.Dispose!=undefined?e1.Dispose():null;
+     }
+     return _;
     },
     filter:function(f,s)
     {
      var getEnumerator;
      getEnumerator=function()
      {
-      var _enum,next;
+      var _enum,dispose,next;
       _enum=Enumerator.Get(s);
+      dispose=function()
+      {
+       return _enum.Dispose();
+      };
       next=function(e)
       {
-       var loop,c,res,_,v;
+       var loop,c,res,_;
        loop=_enum.MoveNext();
        c=_enum.get_Current();
        res=false;
@@ -3485,8 +3638,7 @@
         {
          if(f(c))
           {
-           v=c;
-           e.c=v;
+           e.c=c;
            res=true;
            _=loop=false;
           }
@@ -3497,7 +3649,7 @@
         }
        return res;
       };
-      return T.New(null,null,next);
+      return T.New(null,null,next,dispose);
      };
      return Enumerable.Of(getEnumerator);
     },
@@ -3533,14 +3685,22 @@
     },
     fold:function(f,x,s)
     {
-     var r,e;
+     var r,e,_;
      r=x;
      e=Enumerator.Get(s);
-     while(e.MoveNext())
-      {
-       r=(f(r))(e.get_Current());
-      }
-     return r;
+     try
+     {
+      while(e.MoveNext())
+       {
+        r=(f(r))(e.get_Current());
+       }
+      _=r;
+     }
+     finally
+     {
+      e.Dispose!=undefined?e.Dispose():null;
+     }
+     return _;
     },
     forall:function(p,s)
     {
@@ -3563,31 +3723,47 @@
     {
      return Seq.delay(function()
      {
-      var d,d1,keys,e,c,k,h;
+      var d,d1,keys,e,_,c,k,h;
       d={};
       d1={};
       keys=[];
       e=Enumerator.Get(s);
-      while(e.MoveNext())
-       {
-        c=e.get_Current();
-        k=f(c);
-        h=Unchecked.Hash(k);
-        !d.hasOwnProperty(h)?keys.push(k):null;
-        d1[h]=k;
-        d.hasOwnProperty(h)?d[h].push(c):void(d[h]=[c]);
-       }
-      return Arrays.map(function(k1)
+      try
       {
-       return[k1,d[Unchecked.Hash(k1)]];
-      },keys);
+       while(e.MoveNext())
+        {
+         c=e.get_Current();
+         k=f(c);
+         h=Unchecked.Hash(k);
+         !d.hasOwnProperty(h)?keys.push(k):null;
+         d1[h]=k;
+         d.hasOwnProperty(h)?d[h].push(c):void(d[h]=[c]);
+        }
+       _=Arrays.map(function(k1)
+       {
+        return[k1,d[Unchecked.Hash(k1)]];
+       },keys);
+      }
+      finally
+      {
+       e.Dispose!=undefined?e.Dispose():null;
+      }
+      return _;
      });
     },
     head:function(s)
     {
-     var e;
+     var e,_;
      e=Enumerator.Get(s);
-     return e.MoveNext()?e.get_Current():Seq.insufficient();
+     try
+     {
+      _=e.MoveNext()?e.get_Current():Seq.insufficient();
+     }
+     finally
+     {
+      e.Dispose!=undefined?e.Dispose():null;
+     }
+     return _;
     },
     init:function(n,f)
     {
@@ -3601,14 +3777,13 @@
       var next;
       next=function(e)
       {
-       var v,v1;
-       v=f(e.s);
-       e.c=v;
-       v1=e.s+1;
-       e.s=v1;
+       e.c=f(e.s);
+       e.s=e.s+1;
        return true;
       };
-      return T.New(0,null,next);
+      return T.New(0,null,next,function()
+      {
+      });
      };
      return Enumerable.Of(getEnumerator);
     },
@@ -3618,9 +3793,17 @@
     },
     isEmpty:function(s)
     {
-     var e;
+     var e,_;
      e=Enumerator.Get(s);
-     return!e.MoveNext();
+     try
+     {
+      _=!e.MoveNext();
+     }
+     finally
+     {
+      e.Dispose!=undefined?e.Dispose():null;
+     }
+     return _;
     },
     iter:function(p,s)
     {
@@ -3634,52 +3817,85 @@
     },
     iter2:function(p,s1,s2)
     {
-     var e1,e2;
+     var e1,_,e2,_1;
      e1=Enumerator.Get(s1);
-     e2=Enumerator.Get(s2);
-     while(e1.MoveNext()?e2.MoveNext():false)
+     try
+     {
+      e2=Enumerator.Get(s2);
+      try
       {
-       (p(e1.get_Current()))(e2.get_Current());
+       while(e1.MoveNext()?e2.MoveNext():false)
+        {
+         (p(e1.get_Current()))(e2.get_Current());
+        }
       }
-     return;
+      finally
+      {
+       e2.Dispose!=undefined?e2.Dispose():null;
+      }
+      _=_1;
+     }
+     finally
+     {
+      e1.Dispose!=undefined?e1.Dispose():null;
+     }
+     return _;
     },
     iteri:function(p,s)
     {
-     var i,e;
+     var i,e,_;
      i=0;
      e=Enumerator.Get(s);
-     while(e.MoveNext())
-      {
-       (p(i))(e.get_Current());
-       i=i+1;
-      }
-     return;
+     try
+     {
+      while(e.MoveNext())
+       {
+        (p(i))(e.get_Current());
+        i=i+1;
+       }
+     }
+     finally
+     {
+      e.Dispose!=undefined?e.Dispose():null;
+     }
+     return _;
     },
     length:function(s)
     {
-     var i,e;
+     var i,e,_;
      i=0;
      e=Enumerator.Get(s);
-     while(e.MoveNext())
-      {
-       i=i+1;
-      }
-     return i;
+     try
+     {
+      while(e.MoveNext())
+       {
+        i=i+1;
+       }
+      _=i;
+     }
+     finally
+     {
+      e.Dispose!=undefined?e.Dispose():null;
+     }
+     return _;
     },
     map:function(f,s)
     {
      var getEnumerator;
      getEnumerator=function()
      {
-      var en,next;
+      var en,dispose,next;
       en=Enumerator.Get(s);
+      dispose=function()
+      {
+       return en.Dispose();
+      };
       next=function(e)
       {
-       var _,v;
+       var _;
        if(en.MoveNext())
         {
-         v=f(en.get_Current());
-         e.c=v;
+         e.c=f(en.get_Current());
          _=true;
         }
        else
@@ -3688,7 +3904,7 @@
         }
        return _;
       };
-      return T.New(null,null,next);
+      return T.New(null,null,next,dispose);
      };
      return Enumerable.Of(getEnumerator);
     },
@@ -3704,16 +3920,20 @@
      var getEnumerator;
      getEnumerator=function()
      {
-      var e1,e2,next;
+      var e1,e2,dispose,next;
       e1=Enumerator.Get(s1);
       e2=Enumerator.Get(s2);
+      dispose=function()
+      {
+       e1.Dispose();
+       return e2.Dispose();
+      };
       next=function(e)
       {
-       var _,v;
+       var _;
        if(e1.MoveNext()?e2.MoveNext():false)
         {
-         v=(f(e1.get_Current()))(e2.get_Current());
-         e.c=v;
+         e.c=(f(e1.get_Current()))(e2.get_Current());
          _=true;
         }
        else
@@ -3722,7 +3942,7 @@
         }
        return _;
       };
-      return T.New(null,null,next);
+      return T.New(null,null,next,dispose);
      };
      return Enumerable.Of(getEnumerator);
     },
@@ -3768,16 +3988,24 @@
     },
     nth:function(index,s)
     {
-     var pos,e;
+     var pos,e,_;
      index<0?Operators.FailWith("negative index requested"):null;
      pos=-1;
      e=Enumerator.Get(s);
-     while(pos<index)
-      {
-       !e.MoveNext()?Seq.insufficient():null;
-       pos=pos+1;
-      }
-     return e.get_Current();
+     try
+     {
+      while(pos<index)
+       {
+        !e.MoveNext()?Seq.insufficient():null;
+        pos=pos+1;
+       }
+      _=e.get_Current();
+     }
+     finally
+     {
+      e.Dispose!=undefined?e.Dispose():null;
+     }
+     return _;
     },
     pairwise:function(s)
     {
@@ -3813,32 +4041,43 @@
     },
     reduce:function(f,source)
     {
-     var e,r;
+     var e,_,r;
      e=Enumerator.Get(source);
-     !e.MoveNext()?Operators.FailWith("The input sequence was empty"):null;
-     r=e.get_Current();
-     while(e.MoveNext())
-      {
-       r=(f(r))(e.get_Current());
-      }
-     return r;
+     try
+     {
+      !e.MoveNext()?Operators.FailWith("The input sequence was empty"):null;
+      r=e.get_Current();
+      while(e.MoveNext())
+       {
+        r=(f(r))(e.get_Current());
+       }
+      _=r;
+     }
+     finally
+     {
+      e.Dispose!=undefined?e.Dispose():null;
+     }
+     return _;
     },
     scan:function(f,x,s)
     {
      var getEnumerator;
      getEnumerator=function()
      {
-      var en,next;
+      var en,dispose,next;
       en=Enumerator.Get(s);
+      dispose=function()
+      {
+       return en.Dispose();
+      };
       next=function(e)
       {
-       var _,_1,v;
+       var _,_1;
        if(e.s)
         {
          if(en.MoveNext())
           {
-           v=(f(e.get_Current()))(en.get_Current());
-           e.c=v;
+           e.c=(f(e.get_Current()))(en.get_Current());
            _1=true;
           }
          else
@@ -3855,7 +4094,7 @@
         }
        return _;
       };
-      return T.New(false,null,next);
+      return T.New(false,null,next,dispose);
      };
      return Enumerable.Of(getEnumerator);
     },
@@ -3875,7 +4114,7 @@
     {
      return Enumerable.Of(function()
      {
-      var e,empty,_,_this,next;
+      var e,empty,_;
       e=Enumerator.Get(s);
       empty=true;
       while(e.MoveNext()?f(e.get_Current()):false)
@@ -3884,31 +4123,31 @@
        }
       if(empty)
        {
-        _this=Seq.empty();
-        _=Enumerator.Get(_this);
+        e.Dispose();
+        _=Enumerator.Get(Seq.empty());
        }
       else
        {
-        next=function(x)
+        _=T.New(true,null,function(x)
         {
-         var _1,v,r,v1;
+         var _1,r;
          if(x.s)
           {
            x.s=false;
-           v=e.get_Current();
-           x.c=v;
+           x.c=e.get_Current();
            _1=true;
           }
          else
           {
            r=e.MoveNext();
-           v1=e.get_Current();
-           x.c=v1;
+           x.c=e.get_Current();
            _1=r;
           }
          return _1;
-        };
-        _=T.New(true,null,next);
+        },function()
+        {
+         return e.Dispose();
+        });
        }
       return _;
      });
@@ -3952,38 +4191,48 @@
     },
     take:function(n,s)
     {
+     n<=0?Operators.FailWith("The input must be non-negative."):null;
      return Enumerable.Of(function()
      {
-      var e,next;
-      e=Enumerator.Get(s);
-      next=function(_enum)
+      var e;
+      e=[Enumerator.Get(s)];
+      return T.New(0,null,function(_enum)
       {
-       var _,_1,v,v1;
-       if(_enum.s>=n)
+       var _,en,_1,_2;
+       if(_enum.s===n)
         {
          _=false;
         }
        else
         {
-         if(e.MoveNext())
+         en=e[0];
+         if(Unchecked.Equals(en,null))
           {
-           v=_enum.s+1;
-           _enum.s=v;
-           v1=e.get_Current();
-           _enum.c=v1;
-           _1=true;
+           _1=false;
           }
          else
           {
-           e.Dispose();
-           _enum.s=n;
-           _1=false;
+           if(en.MoveNext())
+            {
+             _enum.s=_enum.s+1;
+             _enum.c=en.get_Current();
+             _2=true;
+            }
+           else
+            {
+             _2=Seq.insufficient();
+            }
+           _1=_2;
           }
          _=_1;
         }
        return _;
-      };
-      return T.New(0,null,next);
+      },function()
+      {
+       var x;
+       x=e[0];
+       return!Unchecked.Equals(x,null)?x.Dispose():null;
+      });
      });
     },
     takeWhile:function(f,s)
@@ -4004,14 +4253,21 @@
     },
     toArray:function(s)
     {
-     var q,enumerator,e;
+     var q,enumerator,_,e;
      q=[];
      enumerator=Enumerator.Get(s);
-     while(enumerator.MoveNext())
-      {
-       e=enumerator.get_Current();
-       q.push(e);
-      }
+     try
+     {
+      while(enumerator.MoveNext())
+       {
+        e=enumerator.get_Current();
+        q.push(e);
+       }
+     }
+     finally
+     {
+      enumerator.Dispose!=undefined?enumerator.Dispose():null;
+     }
      return q.slice(0);
     },
     toList:function(s)
@@ -4025,15 +4281,13 @@
       return Seq.enumUsing(Enumerator.Get(s),function(e)
       {
        var i;
-       i={
-        contents:0
-       };
+       i=[0];
        return Seq.enumWhile(function()
        {
-        return e.MoveNext()?i.contents<n:false;
+        return e.MoveNext()?i[0]<n:false;
        },Seq.delay(function()
        {
-        Operators.Increment(i);
+        Ref.incr(i);
         return[e.get_Current()];
        }));
       });
@@ -4041,53 +4295,77 @@
     },
     tryFind:function(ok,s)
     {
-     var e,r,x;
+     var e,_,r,x;
      e=Enumerator.Get(s);
-     r={
-      $:0
-     };
-     while(r.$==0?e.MoveNext():false)
-      {
-       x=e.get_Current();
-       ok(x)?r={
-        $:1,
-        $0:x
-       }:null;
-      }
-     return r;
+     try
+     {
+      r={
+       $:0
+      };
+      while(r.$==0?e.MoveNext():false)
+       {
+        x=e.get_Current();
+        ok(x)?r={
+         $:1,
+         $0:x
+        }:null;
+       }
+      _=r;
+     }
+     finally
+     {
+      e.Dispose!=undefined?e.Dispose():null;
+     }
+     return _;
     },
     tryFindIndex:function(ok,s)
     {
-     var e,loop,i,x;
+     var e,_,loop,i,x;
      e=Enumerator.Get(s);
-     loop=true;
-     i=0;
-     while(loop?e.MoveNext():false)
-      {
-       x=e.get_Current();
-       ok(x)?loop=false:i=i+1;
-      }
-     return loop?{
-      $:0
-     }:{
-      $:1,
-      $0:i
-     };
+     try
+     {
+      loop=true;
+      i=0;
+      while(loop?e.MoveNext():false)
+       {
+        x=e.get_Current();
+        ok(x)?loop=false:i=i+1;
+       }
+      _=loop?{
+       $:0
+      }:{
+       $:1,
+       $0:i
+      };
+     }
+     finally
+     {
+      e.Dispose!=undefined?e.Dispose():null;
+     }
+     return _;
     },
     tryPick:function(f,s)
     {
-     var e,r;
+     var e,_,r;
      e=Enumerator.Get(s);
-     r={
-      $:0
-     };
-     while(Unchecked.Equals(r,{
-      $:0
-     })?e.MoveNext():false)
-      {
-       r=f(e.get_Current());
-      }
-     return r;
+     try
+     {
+      r={
+       $:0
+      };
+      while(Unchecked.Equals(r,{
+       $:0
+      })?e.MoveNext():false)
+       {
+        r=f(e.get_Current());
+       }
+      _=r;
+     }
+     finally
+     {
+      e.Dispose!=undefined?e.Dispose():null;
+     }
+     return _;
     },
     unfold:function(f,s)
     {
@@ -4113,7 +4391,9 @@
         }
        return _;
       };
-      return T.New(s,null,next);
+      return T.New(s,null,next,function()
+      {
+      });
      };
      return Enumerable.Of(getEnumerator);
     },
@@ -4569,14 +4849,13 @@
      var replaceLoop;
      replaceLoop=function(subj)
      {
-      var index,_,replaced,nextStartIndex,ct;
+      var index,_,replaced,nextStartIndex;
       index=subj.indexOf(search);
       if(index!==-1)
        {
         replaced=Strings.ReplaceOnce(subj,search,replace);
         nextStartIndex=index+replace.length;
-        ct=index+replace.length;
-        _=Strings.Substring(replaced,0,ct)+replaceLoop(replaced.substring(nextStartIndex));
+        _=Strings.Substring(replaced,0,index+replace.length)+replaceLoop(replaced.substring(nextStartIndex));
        }
       else
        {
@@ -4853,15 +5132,13 @@
        {
         return Unchecked.hashMix(x,y);
        };
-       h={
-        contents:0
-       };
+       h=[0];
        JSModule.ForEach(o,function(key)
        {
-        h.contents=op_PlusPlus(op_PlusPlus(h.contents,Unchecked.hashString(key)),Unchecked.Hash(o[key]));
+        h[0]=op_PlusPlus(op_PlusPlus(h[0],Unchecked.hashString(key)),Unchecked.Hash(o[key]));
         return false;
        });
-       _=h.contents;
+       _=h[0];
       }
      return _;
     },
@@ -4909,17 +5186,19 @@
  });
  Runtime.OnInit(function()
  {
+  AggregateException=Runtime.Safe(Global.WebSharper.AggregateException);
+  Exception=Runtime.Safe(Global.WebSharper.Exception);
+  ArgumentException=Runtime.Safe(Global.WebSharper.ArgumentException);
   Number=Runtime.Safe(Global.Number);
   Arrays=Runtime.Safe(Global.WebSharper.Arrays);
   Operators=Runtime.Safe(Global.WebSharper.Operators);
-  Error=Runtime.Safe(Global.Error);
+  IndexOutOfRangeException=Runtime.Safe(Global.WebSharper.IndexOutOfRangeException);
   Array=Runtime.Safe(Global.Array);
   Seq=Runtime.Safe(Global.WebSharper.Seq);
   Unchecked=Runtime.Safe(Global.WebSharper.Unchecked);
   Enumerator=Runtime.Safe(Global.WebSharper.Enumerator);
   Arrays2D=Runtime.Safe(Global.WebSharper.Arrays2D);
   Concurrency=Runtime.Safe(Global.WebSharper.Concurrency);
-  AggregateException=Runtime.Safe(Global.WebSharper.AggregateException);
   Option=Runtime.Safe(Global.WebSharper.Option);
   clearTimeout=Runtime.Safe(Global.clearTimeout);
   setTimeout=Runtime.Safe(Global.setTimeout);
@@ -4927,6 +5206,7 @@
   Char=Runtime.Safe(Global.WebSharper.Char);
   Util=Runtime.Safe(Global.WebSharper.Util);
   Lazy=Runtime.Safe(Global.WebSharper.Lazy);
+  OperationCanceledException=Runtime.Safe(Global.WebSharper.OperationCanceledException);
   Date=Runtime.Safe(Global.Date);
   console=Runtime.Safe(Global.console);
   Scheduler=Runtime.Safe(Concurrency.Scheduler);
@@ -4942,8 +5222,10 @@
   JSModule=Runtime.Safe(JavaScript.JSModule);
   HtmlContentExtensions=Runtime.Safe(Client.HtmlContentExtensions);
   SingleNode=Runtime.Safe(HtmlContentExtensions.SingleNode);
+  InvalidOperationException=Runtime.Safe(Global.WebSharper.InvalidOperationException);
   List=Runtime.Safe(Global.WebSharper.List);
   T1=Runtime.Safe(List.T);
+  MatchFailureException=Runtime.Safe(Global.WebSharper.MatchFailureException);
   Math=Runtime.Safe(Global.Math);
   Strings=Runtime.Safe(Global.WebSharper.Strings);
   PrintfHelpers=Runtime.Safe(Global.WebSharper.PrintfHelpers);
@@ -4953,11 +5235,18 @@
   AjaxRemotingProvider=Runtime.Safe(Remoting.AjaxRemotingProvider);
   window=Runtime.Safe(Global.window);
   Enumerable=Runtime.Safe(Global.WebSharper.Enumerable);
+  Ref=Runtime.Safe(Global.WebSharper.Ref);
   String=Runtime.Safe(Global.String);
   return RegExp=Runtime.Safe(Global.RegExp);
  });
  Runtime.OnLoad(function()
  {
+  Runtime.Inherit(AggregateException,Exception);
+  Runtime.Inherit(ArgumentException,Exception);
+  Runtime.Inherit(IndexOutOfRangeException,Exception);
+  Runtime.Inherit(InvalidOperationException,Exception);
+  Runtime.Inherit(MatchFailureException,Exception);
+  Runtime.Inherit(OperationCanceledException,Exception);
   Remoting.EndPoint();
   Remoting.AjaxProvider();
   Activator.Activate();

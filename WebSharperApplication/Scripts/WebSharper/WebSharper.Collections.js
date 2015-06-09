@@ -1,6 +1,6 @@
 (function()
 {
- var Global=this,Runtime=this.IntelliFactory.Runtime,Collections,BalancedTree,Operators,Arrays,Seq,List,T,JavaScript,JSModule,Enumerator,DictionaryUtil,Dictionary,Unchecked,FSharpMap,Pair,Option,MapUtil,FSharpSet,SetModule,SetUtil,Array,HashSet,HashSetUtil,HashSet1,LinkedList,EnumeratorProxy,ListProxy,ResizeArray,ResizeArrayProxy;
+ var Global=this,Runtime=this.IntelliFactory.Runtime,Collections,BalancedTree,Operators,Arrays,Seq,List,T,JavaScript,JSModule,Enumerator,DictionaryUtil,Dictionary,Unchecked,FSharpMap,Pair,Option,MapUtil,FSharpSet,SetModule,SetUtil,Array,HashSetUtil,HashSetProxy,LinkedList,E,T1,ResizeArray,ResizeArrayProxy;
  Runtime.Define(Global,{
   WebSharper:{
    Collections:{
@@ -205,7 +205,7 @@
      },
      Remove:function(k,src)
      {
-      var patternInput,t,spine,_,_1,_2,source,t1,t2,data,t3;
+      var patternInput,t,spine,_,_1,_2,source,data,t1;
       patternInput=BalancedTree.Lookup(k,src);
       t=patternInput[0];
       spine=patternInput[1];
@@ -227,12 +227,10 @@
            }
           else
            {
-            t1=t.Left;
-            t2=t.Right;
-            source=Seq.append(BalancedTree.Enumerate(false,t1),BalancedTree.Enumerate(false,t2));
+            source=Seq.append(BalancedTree.Enumerate(false,t.Left),BalancedTree.Enumerate(false,t.Right));
             data=Seq.toArray(source);
-            t3=BalancedTree.Build(data,0,data.length-1);
-            _2=BalancedTree.Rebuild(spine,t3);
+            t1=BalancedTree.Build(data,0,data.length-1);
+            _2=BalancedTree.Rebuild(spine,t1);
            }
           _1=_2;
          }
@@ -392,18 +390,25 @@
      },
      New4:function(init,equals,hash)
      {
-      var r,enumerator,x,x1;
+      var r,enumerator,_,x,x1;
       r=Runtime.New(this,{});
       r.hash=hash;
       r.count=0;
       r.data={};
       enumerator=Enumerator.Get(init);
-      while(enumerator.MoveNext())
-       {
-        x=enumerator.get_Current();
-        x1=x.K;
-        r.data[r.hash.call(null,x1)]=x.V;
-       }
+      try
+      {
+       while(enumerator.MoveNext())
+        {
+         x=enumerator.get_Current();
+         x1=x.K;
+         r.data[r.hash.call(null,x1)]=x.V;
+        }
+      }
+      finally
+      {
+       enumerator.Dispose!=undefined?enumerator.Dispose():null;
+      }
       return r;
      }
     }),
@@ -456,8 +461,7 @@
      },
      GetEnumerator:function()
      {
-      var t,mapping,source,s;
-      t=this.tree;
+      var mapping,source,s;
       mapping=function(kv)
       {
        return{
@@ -465,15 +469,13 @@
         V:kv.Value
        };
       };
-      source=BalancedTree.Enumerate(false,t);
+      source=BalancedTree.Enumerate(false,this.tree);
       s=Seq.map(mapping,source);
       return Enumerator.Get(s);
      },
      GetHashCode:function()
      {
-      var x;
-      x=Seq.toArray(this);
-      return Unchecked.Hash(x);
+      return Unchecked.Hash(Seq.toArray(this));
      },
      Remove:function(k)
      {
@@ -545,7 +547,7 @@
     FSharpSet:Runtime.Class({
      Add:function(x)
      {
-      return FSharpSet.New(BalancedTree.Add(x,this.tree));
+      return FSharpSet.New1(BalancedTree.Add(x,this.tree));
      },
      CompareTo:function(other)
      {
@@ -573,16 +575,11 @@
      },
      GetEnumerator:function()
      {
-      var t,_this;
-      t=this.tree;
-      _this=BalancedTree.Enumerate(false,t);
-      return Enumerator.Get(_this);
+      return Enumerator.Get(BalancedTree.Enumerate(false,this.tree));
      },
      GetHashCode:function()
      {
-      var _this;
-      _this=Seq.toArray(this);
-      return-1741749453+Unchecked.Hash(_this);
+      return-1741749453+Unchecked.Hash(Seq.toArray(this));
      },
      IsProperSubsetOf:function(s)
      {
@@ -609,14 +606,11 @@
      },
      Remove:function(v)
      {
-      return FSharpSet.New(BalancedTree.Remove(v,this.tree));
+      return FSharpSet.New1(BalancedTree.Remove(v,this.tree));
      },
      add:function(x)
      {
-      var a,t;
-      a=Seq.append(this,x);
-      t=BalancedTree.OfSeq(a);
-      return FSharpSet.New(t);
+      return FSharpSet.New1(BalancedTree.OfSeq(Seq.append(this,x)));
      },
      get_Count:function()
      {
@@ -630,15 +624,11 @@
      },
      get_MaximumElement:function()
      {
-      var t;
-      t=this.tree;
-      return Seq.head(BalancedTree.Enumerate(true,t));
+      return Seq.head(BalancedTree.Enumerate(true,this.tree));
      },
      get_MinimumElement:function()
      {
-      var t;
-      t=this.tree;
-      return Seq.head(BalancedTree.Enumerate(false,t));
+      return Seq.head(BalancedTree.Enumerate(false,this.tree));
      },
      get_Tree:function()
      {
@@ -652,353 +642,377 @@
       },this);
      }
     },{
-     New:function(tree)
+     New:function(s)
+     {
+      return Runtime.New(this,FSharpSet.New1(SetUtil.ofSeq(s)));
+     },
+     New1:function(tree)
      {
       var r;
       r=Runtime.New(this,{});
       r.tree=tree;
       return r;
-     },
-     New1:function(s)
-     {
-      return Runtime.New(this,FSharpSet.New(SetUtil.ofSeq(s)));
      }
     }),
-    HashSet:{
-     HashSet:Runtime.Class({
-      Add:function(item)
+    HashSetProxy:Runtime.Class({
+     Add:function(item)
+     {
+      return this.add(item);
+     },
+     Clear:function()
+     {
+      this.data=Array.prototype.constructor.apply(Array,[]);
+      this.count=0;
+      return;
+     },
+     Contains:function(item)
+     {
+      var arr;
+      arr=this.data[this.hash.call(null,item)];
+      return arr==null?false:this.arrContains(item,arr);
+     },
+     CopyTo:function(arr)
+     {
+      var i,all,i1;
+      i=0;
+      all=HashSetUtil.concat(this.data);
+      for(i1=0;i1<=all.length-1;i1++){
+       Arrays.set(arr,i1,all[i1]);
+      }
+      return;
+     },
+     ExceptWith:function(xs)
+     {
+      var enumerator,_,item,value;
+      enumerator=Enumerator.Get(xs);
+      try
       {
-       return this.add(item);
-      },
-      Clear:function()
-      {
-       this.data=Array.prototype.constructor.apply(Array,[]);
-       this.count=0;
-       return;
-      },
-      Contains:function(item)
-      {
-       var arr;
-       arr=this.data[this.hash.call(null,item)];
-       return arr==null?false:this.arrContains(item,arr);
-      },
-      CopyTo:function(arr)
-      {
-       var i,all,i1;
-       i=0;
-       all=HashSetUtil.concat(this.data);
-       for(i1=0;i1<=all.length-1;i1++){
-        Arrays.set(arr,i1,all[i1]);
-       }
-       return;
-      },
-      ExceptWith:function(xs)
-      {
-       var enumerator,item,value;
-       enumerator=Enumerator.Get(xs);
        while(enumerator.MoveNext())
         {
          item=enumerator.get_Current();
          value=this.Remove(item);
         }
-       return;
-      },
-      GetEnumerator:function()
+      }
+      finally
       {
-       var _this;
-       _this=HashSetUtil.concat(this.data);
-       return Enumerator.Get(_this);
-      },
-      IntersectWith:function(xs)
-      {
-       var other,all,i,item,value,_,value1;
-       other=HashSet1.New2(xs,this.equals,this.hash);
-       all=HashSetUtil.concat(this.data);
-       for(i=0;i<=all.length-1;i++){
-        item=all[i];
-        value=other.Contains(item);
-        if(!value)
-         {
-          value1=this.Remove(item);
-          _=void value1;
-         }
-        else
-         {
-          _=null;
-         }
-       }
-       return;
-      },
-      IsProperSubsetOf:function(xs)
-      {
-       var other;
-       other=Arrays.ofSeq(xs);
-       return this.count<Arrays.length(other)?this.IsSubsetOf(other):false;
-      },
-      IsProperSupersetOf:function(xs)
-      {
-       var other;
-       other=Arrays.ofSeq(xs);
-       return this.count>Arrays.length(other)?this.IsSupersetOf(other):false;
-      },
-      IsSubsetOf:function(xs)
-      {
-       var other,predicate,array;
-       other=HashSet1.New2(xs,this.equals,this.hash);
-       predicate=function(arg00)
-       {
-        return other.Contains(arg00);
-       };
-       array=HashSetUtil.concat(this.data);
-       return Seq.forall(predicate,array);
-      },
-      IsSupersetOf:function(xs)
-      {
-       var predicate,x=this;
-       predicate=function(arg00)
-       {
-        return x.Contains(arg00);
-       };
-       return Seq.forall(predicate,xs);
-      },
-      Overlaps:function(xs)
-      {
-       var predicate,x=this;
-       predicate=function(arg00)
-       {
-        return x.Contains(arg00);
-       };
-       return Seq.exists(predicate,xs);
-      },
-      Remove:function(item)
-      {
-       var h,arr,_,_1;
-       h=this.hash.call(null,item);
-       arr=this.data[h];
-       if(arr==null)
+       enumerator.Dispose!=undefined?enumerator.Dispose():null;
+      }
+      return _;
+     },
+     GetEnumerator:function()
+     {
+      return Enumerator.Get(HashSetUtil.concat(this.data));
+     },
+     IntersectWith:function(xs)
+     {
+      var other,all,i,item,value,_,value1;
+      other=HashSetProxy.New3(xs,this.equals,this.hash);
+      all=HashSetUtil.concat(this.data);
+      for(i=0;i<=all.length-1;i++){
+       item=all[i];
+       value=other.Contains(item);
+       if(!value)
         {
-         _=false;
+         value1=this.Remove(item);
+         _=void value1;
         }
        else
         {
-         if(this.arrRemove(item,arr))
-          {
-           this.count=this.count-1;
-           _1=true;
-          }
-         else
-          {
-           _1=false;
-          }
-         _=_1;
+         _=null;
         }
-       return _;
-      },
-      RemoveWhere:function(cond)
+      }
+      return;
+     },
+     IsProperSubsetOf:function(xs)
+     {
+      var other;
+      other=Arrays.ofSeq(xs);
+      return this.count<Arrays.length(other)?this.IsSubsetOf(other):false;
+     },
+     IsProperSupersetOf:function(xs)
+     {
+      var other;
+      other=Arrays.ofSeq(xs);
+      return this.count>Arrays.length(other)?this.IsSupersetOf(other):false;
+     },
+     IsSubsetOf:function(xs)
+     {
+      var other,predicate,array;
+      other=HashSetProxy.New3(xs,this.equals,this.hash);
+      predicate=function(arg00)
       {
-       var all,i,item,_,value;
-       all=HashSetUtil.concat(this.data);
-       for(i=0;i<=all.length-1;i++){
-        item=all[i];
-        if(cond(item))
+       return other.Contains(arg00);
+      };
+      array=HashSetUtil.concat(this.data);
+      return Seq.forall(predicate,array);
+     },
+     IsSupersetOf:function(xs)
+     {
+      var predicate,x=this;
+      predicate=function(arg00)
+      {
+       return x.Contains(arg00);
+      };
+      return Seq.forall(predicate,xs);
+     },
+     Overlaps:function(xs)
+     {
+      var predicate,x=this;
+      predicate=function(arg00)
+      {
+       return x.Contains(arg00);
+      };
+      return Seq.exists(predicate,xs);
+     },
+     Remove:function(item)
+     {
+      var h,arr,_,_1;
+      h=this.hash.call(null,item);
+      arr=this.data[h];
+      if(arr==null)
+       {
+        _=false;
+       }
+      else
+       {
+        if(this.arrRemove(item,arr))
          {
-          value=this.Remove(item);
-          _=void value;
+          this.count=this.count-1;
+          _1=true;
          }
         else
          {
-          _=null;
+          _1=false;
          }
+        _=_1;
        }
-       return;
-      },
-      SetEquals:function(xs)
+      return _;
+     },
+     RemoveWhere:function(cond)
+     {
+      var all,i,item,_,value;
+      all=HashSetUtil.concat(this.data);
+      for(i=0;i<=all.length-1;i++){
+       item=all[i];
+       if(cond(item))
+        {
+         value=this.Remove(item);
+         _=void value;
+        }
+       else
+        {
+         _=null;
+        }
+      }
+      return;
+     },
+     SetEquals:function(xs)
+     {
+      var other;
+      other=HashSetProxy.New3(xs,this.equals,this.hash);
+      return this.get_Count()===other.get_Count()?this.IsSupersetOf(other):false;
+     },
+     SymmetricExceptWith:function(xs)
+     {
+      var enumerator,_,item,_1,value,value1;
+      enumerator=Enumerator.Get(xs);
+      try
       {
-       var other;
-       other=HashSet1.New2(xs,this.equals,this.hash);
-       return this.get_Count()===other.get_Count()?this.IsSupersetOf(other):false;
-      },
-      SymmetricExceptWith:function(xs)
-      {
-       var enumerator,item,_,value,value1;
-       enumerator=Enumerator.Get(xs);
        while(enumerator.MoveNext())
         {
          item=enumerator.get_Current();
          if(this.Contains(item))
           {
            value=this.Remove(item);
-           _=void value;
+           _1=void value;
           }
          else
           {
            value1=this.Add(item);
-           _=void value1;
+           _1=void value1;
           }
         }
-       return;
-      },
-      UnionWith:function(xs)
+      }
+      finally
       {
-       var enumerator,item,value;
-       enumerator=Enumerator.Get(xs);
+       enumerator.Dispose!=undefined?enumerator.Dispose():null;
+      }
+      return _;
+     },
+     UnionWith:function(xs)
+     {
+      var enumerator,_,item,value;
+      enumerator=Enumerator.Get(xs);
+      try
+      {
        while(enumerator.MoveNext())
         {
          item=enumerator.get_Current();
          value=this.Add(item);
         }
-       return;
-      },
-      add:function(item)
-      {
-       var h,arr,_,_1,value;
-       h=this.hash.call(null,item);
-       arr=this.data[h];
-       if(arr==null)
-        {
-         this.data[h]=[item];
-         this.count=this.count+1;
-         _=true;
-        }
-       else
-        {
-         if(this.arrContains(item,arr))
-          {
-           _1=false;
-          }
-         else
-          {
-           value=arr.push(item);
-           this.count=this.count+1;
-           _1=true;
-          }
-         _=_1;
-        }
-       return _;
-      },
-      arrContains:function(item,arr)
-      {
-       var c,i,l;
-       c=true;
-       i=0;
-       l=arr.length;
-       while(c?i<l:false)
-        {
-         (this.equals.call(null,arr[i]))(item)?c=false:i=i+1;
-        }
-       return!c;
-      },
-      arrRemove:function(item,arr)
-      {
-       var c,i,l,_,start,ps,value;
-       c=true;
-       i=0;
-       l=arr.length;
-       while(c?i<l:false)
-        {
-         if((this.equals.call(null,arr[i]))(item))
-          {
-           start=i;
-           ps=[];
-           value=arr.splice.apply(arr,[start,1].concat(ps));
-           _=c=false;
-          }
-         else
-          {
-           _=i=i+1;
-          }
-        }
-       return!c;
-      },
-      get_Count:function()
-      {
-       return this.count;
       }
-     },{
-      New:function(init,comparer)
+      finally
       {
-       return Runtime.New(this,HashSet1.New2(init,function(x)
+       enumerator.Dispose!=undefined?enumerator.Dispose():null;
+      }
+      return _;
+     },
+     add:function(item)
+     {
+      var h,arr,_,_1,value;
+      h=this.hash.call(null,item);
+      arr=this.data[h];
+      if(arr==null)
        {
-        return function(y)
-        {
-         return comparer.Equals(x,y);
-        };
-       },function(x)
+        this.data[h]=[item];
+        this.count=this.count+1;
+        _=true;
+       }
+      else
        {
-        return comparer.GetHashCode(x);
-       }));
-      },
-      New1:function(comparer)
+        if(this.arrContains(item,arr))
+         {
+          _1=false;
+         }
+        else
+         {
+          value=arr.push(item);
+          this.count=this.count+1;
+          _1=true;
+         }
+        _=_1;
+       }
+      return _;
+     },
+     arrContains:function(item,arr)
+     {
+      var c,i,l;
+      c=true;
+      i=0;
+      l=arr.length;
+      while(c?i<l:false)
+       {
+        (this.equals.call(null,arr[i]))(item)?c=false:i=i+1;
+       }
+      return!c;
+     },
+     arrRemove:function(item,arr)
+     {
+      var c,i,l,_,start,ps,value;
+      c=true;
+      i=0;
+      l=arr.length;
+      while(c?i<l:false)
+       {
+        if((this.equals.call(null,arr[i]))(item))
+         {
+          start=i;
+          ps=[];
+          value=arr.splice.apply(arr,[start,1].concat(ps));
+          _=c=false;
+         }
+        else
+         {
+          _=i=i+1;
+         }
+       }
+      return!c;
+     },
+     get_Count:function()
+     {
+      return this.count;
+     }
+    },{
+     New:function(init)
+     {
+      return Runtime.New(this,HashSetProxy.New3(init,function(x)
       {
-       return Runtime.New(this,HashSet1.New2(Seq.empty(),function(x)
+       return function(y)
        {
-        return function(y)
-        {
-         return comparer.Equals(x,y);
-        };
-       },function(x)
-       {
-        return comparer.GetHashCode(x);
-       }));
-      },
-      New11:function()
+        return Unchecked.Equals(x,y);
+       };
+      },function(obj)
       {
-       return Runtime.New(this,HashSet1.New2(Seq.empty(),function(x)
-       {
-        return function(y)
-        {
-         return Unchecked.Equals(x,y);
-        };
-       },function(obj)
-       {
-        return Unchecked.Hash(obj);
-       }));
-      },
-      New2:function(init,equals,hash)
+       return Unchecked.Hash(obj);
+      }));
+     },
+     New1:function(comparer)
+     {
+      return Runtime.New(this,HashSetProxy.New3(Seq.empty(),function(x)
       {
-       var r,enumerator,x,value;
-       r=Runtime.New(this,{});
-       r.equals=equals;
-       r.hash=hash;
-       r.data=Array.prototype.constructor.apply(Array,[]);
-       r.count=0;
-       enumerator=Enumerator.Get(init);
+       return function(y)
+       {
+        return comparer.Equals(x,y);
+       };
+      },function(x)
+      {
+       return comparer.GetHashCode(x);
+      }));
+     },
+     New11:function()
+     {
+      return Runtime.New(this,HashSetProxy.New3(Seq.empty(),function(x)
+      {
+       return function(y)
+       {
+        return Unchecked.Equals(x,y);
+       };
+      },function(obj)
+      {
+       return Unchecked.Hash(obj);
+      }));
+     },
+     New2:function(init,comparer)
+     {
+      return Runtime.New(this,HashSetProxy.New3(init,function(x)
+      {
+       return function(y)
+       {
+        return comparer.Equals(x,y);
+       };
+      },function(x)
+      {
+       return comparer.GetHashCode(x);
+      }));
+     },
+     New3:function(init,equals,hash)
+     {
+      var r,enumerator,_,x,value;
+      r=Runtime.New(this,{});
+      r.equals=equals;
+      r.hash=hash;
+      r.data=Array.prototype.constructor.apply(Array,[]);
+      r.count=0;
+      enumerator=Enumerator.Get(init);
+      try
+      {
        while(enumerator.MoveNext())
         {
          x=enumerator.get_Current();
          value=r.add(x);
         }
-       return r;
-      },
-      New3:function(init)
-      {
-       return Runtime.New(this,HashSet1.New2(init,function(x)
-       {
-        return function(y)
-        {
-         return Unchecked.Equals(x,y);
-        };
-       },function(obj)
-       {
-        return Unchecked.Hash(obj);
-       }));
       }
-     }),
-     HashSetUtil:{
-      concat:function($o)
+      finally
       {
-       var $0=this,$this=this;
-       var r=[];
-       for(var k in $o){
-        r.push.apply(r,$o[k]);
-       }
-       ;
-       return r;
+       enumerator.Dispose!=undefined?enumerator.Dispose():null;
       }
+      return r;
+     }
+    }),
+    HashSetUtil:{
+     concat:function($o)
+     {
+      var $0=this,$this=this;
+      var r=[];
+      for(var k in $o){
+       r.push.apply(r,$o[k]);
+      }
+      ;
+      return r;
      }
     },
     LinkedList:{
-     EnumeratorProxy:Runtime.Class({
+     E:Runtime.Class({
       Dispose:function()
       {
        return null;
@@ -1021,7 +1035,7 @@
        return r;
       }
      }),
-     ListProxy:Runtime.Class({
+     T:Runtime.Class({
       AddAfter:function(after,value)
       {
        var before,node,_;
@@ -1152,7 +1166,7 @@
       },
       GetEnumerator:function()
       {
-       return EnumeratorProxy.New(this);
+       return E.New(this);
       },
       Remove:function(node)
       {
@@ -1218,7 +1232,7 @@
      },{
       New:function()
       {
-       return Runtime.New(this,ListProxy.New1(Seq.empty()));
+       return Runtime.New(this,T1.New1(Seq.empty()));
       },
       New1:function(coll)
       {
@@ -1269,17 +1283,16 @@
      },
      Filter:function(f,m)
      {
-      var t,predicate,source,source1,x,x1;
-      t=m.get_Tree();
+      var predicate,source,source1,data,t;
       predicate=function(kv)
       {
        return(f(kv.Key))(kv.Value);
       };
-      source=BalancedTree.Enumerate(false,t);
+      source=BalancedTree.Enumerate(false,m.get_Tree());
       source1=Seq.filter(predicate,source);
-      x=Seq.toArray(source1);
-      x1=BalancedTree.Build(x,0,x.length-1);
-      return FSharpMap.New(x1);
+      data=Seq.toArray(source1);
+      t=BalancedTree.Build(data,0,data.length-1);
+      return FSharpMap.New(t);
      },
      FindKey:function(f,m)
      {
@@ -1297,8 +1310,7 @@
      },
      Fold:function(f,s,m)
      {
-      var t,folder,source;
-      t=m.get_Tree();
+      var folder,source;
       folder=function(s1)
       {
        return function(kv)
@@ -1306,13 +1318,12 @@
         return((f(s1))(kv.Key))(kv.Value);
        };
       };
-      source=BalancedTree.Enumerate(false,t);
+      source=BalancedTree.Enumerate(false,m.get_Tree());
       return Seq.fold(folder,s,source);
      },
      FoldBack:function(f,m,s)
      {
-      var t,folder,source;
-      t=m.get_Tree();
+      var folder,source;
       folder=function(s1)
       {
        return function(kv)
@@ -1320,7 +1331,7 @@
         return((f(kv.Key))(kv.Value))(s1);
        };
       };
-      source=BalancedTree.Enumerate(true,t);
+      source=BalancedTree.Enumerate(true,m.get_Tree());
       return Seq.fold(folder,s,source);
      },
      ForAll:function(f,m)
@@ -1343,8 +1354,7 @@
      },
      Map:function(f,m)
      {
-      var t,mapping,source,data,x;
-      t=m.get_Tree();
+      var mapping,source,data,t;
       mapping=function(kv)
       {
        return Runtime.New(Pair,{
@@ -1352,10 +1362,10 @@
         Value:(f(kv.Key))(kv.Value)
        });
       };
-      source=BalancedTree.Enumerate(false,t);
+      source=BalancedTree.Enumerate(false,m.get_Tree());
       data=Seq.map(mapping,source);
-      x=BalancedTree.OfSeq(data);
-      return FSharpMap.New(x);
+      t=BalancedTree.OfSeq(data);
+      return FSharpMap.New(t);
      },
      OfArray:function(a)
      {
@@ -1376,19 +1386,16 @@
      },
      Partition:function(f,m)
      {
-      var predicate,array,t,patternInput,y,x,t1,t2;
+      var predicate,array,patternInput,y,x;
       predicate=function(kv)
       {
        return(f(kv.Key))(kv.Value);
       };
-      t=m.get_Tree();
-      array=Seq.toArray(BalancedTree.Enumerate(false,t));
+      array=Seq.toArray(BalancedTree.Enumerate(false,m.get_Tree()));
       patternInput=Arrays.partition(predicate,array);
       y=patternInput[1];
       x=patternInput[0];
-      t1=BalancedTree.Build(x,0,x.length-1);
-      t2=BalancedTree.Build(y,0,y.length-1);
-      return[FSharpMap.New(t1),FSharpMap.New(t2)];
+      return[FSharpMap.New(BalancedTree.Build(x,0,x.length-1)),FSharpMap.New(BalancedTree.Build(y,0,y.length-1))];
      },
      Pick:function(f,m)
      {
@@ -1401,13 +1408,12 @@
      },
      ToSeq:function(m)
      {
-      var t,mapping,source;
-      t=m.get_Tree();
+      var mapping,source;
       mapping=function(kv)
       {
        return[kv.Key,kv.Value];
       };
-      source=BalancedTree.Enumerate(false,t);
+      source=BalancedTree.Enumerate(false,m.get_Tree());
       return Seq.map(mapping,source);
      },
      TryFind:function(k,m)
@@ -1473,9 +1479,7 @@
      },
      GetHashCode:function()
      {
-      var x;
-      x=this.Key;
-      return Unchecked.Hash(x);
+      return Unchecked.Hash(this.Key);
      }
     }),
     ResizeArray:{
@@ -1494,9 +1498,8 @@
       },
       Clear:function()
       {
-       var value,_this;
-       _this=this.arr;
-       value=ResizeArray.splice(this.arr,0,Arrays.length(_this),[]);
+       var value;
+       value=ResizeArray.splice(this.arr,0,Arrays.length(this.arr),[]);
        return;
       },
       CopyTo:function(arr)
@@ -1513,15 +1516,11 @@
       },
       GetEnumerator:function()
       {
-       var _this;
-       _this=this.arr;
-       return Enumerator.Get(_this);
+       return Enumerator.Get(this.arr);
       },
       GetRange:function(index,count)
       {
-       var arr;
-       arr=this.arr;
-       return ResizeArrayProxy.New11(Arrays.sub(arr,index,count));
+       return ResizeArrayProxy.New11(Arrays.sub(this.arr,index,count));
       },
       Insert:function(index,items)
       {
@@ -1561,9 +1560,7 @@
       },
       get_Count:function()
       {
-       var _this;
-       _this=this.arr;
-       return Arrays.length(_this);
+       return Arrays.length(this.arr);
       },
       get_Item:function(x)
       {
@@ -1603,32 +1600,27 @@
     SetModule:{
      Filter:function(f,s)
      {
-      var data,t;
+      var data;
       data=Seq.toArray(Seq.filter(f,s));
-      t=BalancedTree.Build(data,0,data.length-1);
-      return FSharpSet.New(t);
+      return FSharpSet.New1(BalancedTree.Build(data,0,data.length-1));
      },
      FoldBack:function(f,a,s)
      {
-      var t;
-      t=a.get_Tree();
       return Seq.fold(function(s1)
       {
        return function(x)
        {
         return(f(x))(s1);
        };
-      },s,BalancedTree.Enumerate(true,t));
+      },s,BalancedTree.Enumerate(true,a.get_Tree()));
      },
      Partition:function(f,a)
      {
-      var patternInput,y,x,t,t1;
+      var patternInput,y,x;
       patternInput=Arrays.partition(f,Seq.toArray(a));
       y=patternInput[1];
       x=patternInput[0];
-      t=BalancedTree.OfSeq(x);
-      t1=BalancedTree.OfSeq(y);
-      return[FSharpSet.New(t),FSharpSet.New(t1)];
+      return[FSharpSet.New1(BalancedTree.OfSeq(x)),FSharpSet.New1(BalancedTree.OfSeq(y))];
      }
     },
     SetUtil:{
@@ -1666,12 +1658,11 @@
   SetModule=Runtime.Safe(Collections.SetModule);
   SetUtil=Runtime.Safe(Collections.SetUtil);
   Array=Runtime.Safe(Global.Array);
-  HashSet=Runtime.Safe(Collections.HashSet);
-  HashSetUtil=Runtime.Safe(HashSet.HashSetUtil);
-  HashSet1=Runtime.Safe(HashSet.HashSet);
+  HashSetUtil=Runtime.Safe(Collections.HashSetUtil);
+  HashSetProxy=Runtime.Safe(Collections.HashSetProxy);
   LinkedList=Runtime.Safe(Collections.LinkedList);
-  EnumeratorProxy=Runtime.Safe(LinkedList.EnumeratorProxy);
-  ListProxy=Runtime.Safe(LinkedList.ListProxy);
+  E=Runtime.Safe(LinkedList.E);
+  T1=Runtime.Safe(LinkedList.T);
   ResizeArray=Runtime.Safe(Collections.ResizeArray);
   return ResizeArrayProxy=Runtime.Safe(ResizeArray.ResizeArrayProxy);
  });
