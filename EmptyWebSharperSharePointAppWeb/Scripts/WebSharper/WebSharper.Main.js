@@ -1,7 +1,48 @@
 (function()
 {
- var Global=this,Runtime=this.IntelliFactory.Runtime,AggregateException,Exception,ArgumentException,Number,Arrays,Operators,IndexOutOfRangeException,Array,Seq,Unchecked,Enumerator,Arrays2D,Concurrency,Option,clearTimeout,setTimeout,CancellationTokenSource,Char,Util,Lazy,OperationCanceledException,Date,console,Scheduler,T,Html,Client,Activator,document,jQuery,Json,JSON,JavaScript,JSModule,HtmlContentExtensions,SingleNode,InvalidOperationException,List,T1,MatchFailureException,Math,Strings,PrintfHelpers,Remoting,XhrProvider,AsyncProxy,AjaxRemotingProvider,window,Enumerable,Ref,String,RegExp;
+ var Global=this,Runtime=this.IntelliFactory.Runtime,Unchecked,Operators,Arrays,Array,AggregateException,Exception,ArgumentException,Number,IndexOutOfRangeException,Seq,Enumerator,Arrays2D,Concurrency,Option,clearTimeout,setTimeout,CancellationTokenSource,Char,Util,Lazy,OperationCanceledException,Date,console,Scheduler,T,Html,Client,Activator,document,jQuery,Json,JSON,JavaScript,JSModule,HtmlContentExtensions,SingleNode,InvalidOperationException,List,T1,MatchFailureException,Math,Strings,PrintfHelpers,Remoting,XhrProvider,AsyncProxy,AjaxRemotingProvider,window,Enumerable,Arrays1,Ref,String,RegExp;
  Runtime.Define(Global,{
+  Arrays:{
+   contains:function(item,arr)
+   {
+    var c,i,l;
+    c=true;
+    i=0;
+    l=arr.length;
+    while(c?i<l:false)
+     {
+      Unchecked.Equals(arr[i],item)?c=false:i=i+1;
+     }
+    return!c;
+   },
+   splitInto:function(count,arr)
+   {
+    var len,_,count1,res,minChunkSize,startIndex,i,i1;
+    count<=0?Operators.FailWith("Count must be positive"):null;
+    len=Arrays.length(arr);
+    if(len===0)
+     {
+      _=[];
+     }
+    else
+     {
+      count1=Operators.Min(count,len);
+      res=Array(count1);
+      minChunkSize=len/count1>>0;
+      startIndex=0;
+      for(i=0;i<=len%count1-1;i++){
+       Arrays.set(res,i,Arrays.sub(arr,startIndex,minChunkSize+1));
+       startIndex=startIndex+minChunkSize+1;
+      }
+      for(i1=len%count1;i1<=count1-1;i1++){
+       Arrays.set(res,i1,Arrays.sub(arr,startIndex,minChunkSize));
+       startIndex=startIndex+minChunkSize;
+      }
+      _=res;
+     }
+    return _;
+   }
+  },
   WebSharper:{
    AggregateException:Runtime.Class({},{
     New:function(innerExceptions)
@@ -2552,7 +2593,9 @@
     },
     range:function(min,max)
     {
-     return Seq.init(1+max-min,function(x)
+     var count;
+     count=1+max-min;
+     return count<=0?Seq.empty():Seq.init(count,function(x)
      {
       return x+min;
      });
@@ -3039,7 +3082,7 @@
     {
      var $0=this,$this=this;
      var xhr=new Global.XMLHttpRequest();
-     xhr.open("POST",$url,$async);
+     xhr.open("GET",$url,$async);
      if($async==true)
       {
        xhr.withCredentials=true;
@@ -3392,42 +3435,59 @@
      var getEnumerator;
      getEnumerator=function()
      {
-      var _enum,seen,dispose,next;
+      var _enum,seen,add,dispose,next;
       _enum=Enumerator.Get(s);
-      seen={};
+      seen=Array.prototype.constructor.apply(Array,[]);
+      add=function(c)
+      {
+       var k,h,cont,_,_1,value;
+       k=f(c);
+       h=Unchecked.Hash(k);
+       cont=seen[h];
+       if(Unchecked.Equals(cont,undefined))
+        {
+         seen[h]=[k];
+         _=true;
+        }
+       else
+        {
+         if(Arrays1.contains(k,cont))
+          {
+           _1=false;
+          }
+         else
+          {
+           value=cont.push(k);
+           _1=true;
+          }
+         _=_1;
+        }
+       return _;
+      };
       dispose=function()
       {
        return _enum.Dispose();
       };
       next=function(e)
       {
-       var _,cur,h,check,has,_1;
+       var _,cur,has,_1;
        if(_enum.MoveNext())
         {
          cur=_enum.get_Current();
-         h=function(c)
-         {
-          return Unchecked.Hash(f(c));
-         };
-         check=function(c)
-         {
-          return seen.hasOwnProperty(h(c));
-         };
-         has=check(cur);
-         while(has?_enum.MoveNext():false)
+         has=add(cur);
+         while(!has?_enum.MoveNext():false)
           {
            cur=_enum.get_Current();
-           has=check(cur);
+           has=add(cur);
           }
          if(has)
           {
-           _1=false;
+           e.c=cur;
+           _1=true;
           }
          else
           {
-           seen[h(cur)]=null;
-           e.c=cur;
-           _1=true;
+           _1=false;
           }
          _=_1;
         }
@@ -3860,6 +3920,32 @@
      }
      return _;
     },
+    last:function(s)
+    {
+     var e,_,value,_1;
+     e=Enumerator.Get(s);
+     try
+     {
+      value=e.MoveNext();
+      if(!value)
+       {
+        _1=Seq.insufficient();
+       }
+      else
+       {
+        while(e.MoveNext())
+         {
+         }
+        _1=e.get_Current();
+       }
+      _=_1;
+     }
+     finally
+     {
+      e.Dispose!=undefined?e.Dispose():null;
+     }
+     return _;
+    },
     length:function(s)
     {
      var i,e,_;
@@ -4198,8 +4284,9 @@
       e=[Enumerator.Get(s)];
       return T.New(0,null,function(_enum)
       {
-       var _,en,_1,_2;
-       if(_enum.s===n)
+       var _,en,_1,_2,_3;
+       _enum.s=_enum.s+1;
+       if(_enum.s>n)
         {
          _=false;
         }
@@ -4208,18 +4295,28 @@
          en=e[0];
          if(Unchecked.Equals(en,null))
           {
-           _1=false;
+           _1=Seq.insufficient();
           }
          else
           {
            if(en.MoveNext())
             {
-             _enum.s=_enum.s+1;
              _enum.c=en.get_Current();
+             if(_enum.s===n)
+              {
+               en.Dispose();
+               _3=void(e[0]=null);
+              }
+             else
+              {
+               _3=null;
+              }
              _2=true;
             }
            else
             {
+             en.Dispose();
+             e[0]=null;
              _2=Seq.insufficient();
             }
            _1=_2;
@@ -4823,7 +4920,7 @@
     PadLeftWith:function($s,$n,$c)
     {
      var $0=this,$this=this;
-     return Global.Array($n-$s.length+1).join(Global.String.fromCharCode($c))+$s;
+     return $n>$s.length?Global.Array($n-$s.length+1).join(Global.String.fromCharCode($c))+$s:$s;
     },
     PadRight:function(s,n)
     {
@@ -4832,7 +4929,7 @@
     PadRightWith:function($s,$n,$c)
     {
      var $0=this,$this=this;
-     return $s+Global.Array($n-$s.length+1).join(Global.String.fromCharCode($c));
+     return $n>$s.length?$s+Global.Array($n-$s.length+1).join(Global.String.fromCharCode($c)):$s;
     },
     RegexEscape:function($s)
     {
@@ -5186,16 +5283,16 @@
  });
  Runtime.OnInit(function()
  {
+  Unchecked=Runtime.Safe(Global.WebSharper.Unchecked);
+  Operators=Runtime.Safe(Global.WebSharper.Operators);
+  Arrays=Runtime.Safe(Global.WebSharper.Arrays);
+  Array=Runtime.Safe(Global.Array);
   AggregateException=Runtime.Safe(Global.WebSharper.AggregateException);
   Exception=Runtime.Safe(Global.WebSharper.Exception);
   ArgumentException=Runtime.Safe(Global.WebSharper.ArgumentException);
   Number=Runtime.Safe(Global.Number);
-  Arrays=Runtime.Safe(Global.WebSharper.Arrays);
-  Operators=Runtime.Safe(Global.WebSharper.Operators);
   IndexOutOfRangeException=Runtime.Safe(Global.WebSharper.IndexOutOfRangeException);
-  Array=Runtime.Safe(Global.Array);
   Seq=Runtime.Safe(Global.WebSharper.Seq);
-  Unchecked=Runtime.Safe(Global.WebSharper.Unchecked);
   Enumerator=Runtime.Safe(Global.WebSharper.Enumerator);
   Arrays2D=Runtime.Safe(Global.WebSharper.Arrays2D);
   Concurrency=Runtime.Safe(Global.WebSharper.Concurrency);
@@ -5235,6 +5332,7 @@
   AjaxRemotingProvider=Runtime.Safe(Remoting.AjaxRemotingProvider);
   window=Runtime.Safe(Global.window);
   Enumerable=Runtime.Safe(Global.WebSharper.Enumerable);
+  Arrays1=Runtime.Safe(Global.Arrays);
   Ref=Runtime.Safe(Global.WebSharper.Ref);
   String=Runtime.Safe(Global.String);
   return RegExp=Runtime.Safe(Global.RegExp);

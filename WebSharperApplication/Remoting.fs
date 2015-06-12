@@ -4,8 +4,9 @@ open WebSharper
 
 module Remoting =
 
-    [<Remote>]
+    [<Rpc>]
     let Process input =
         async {
             return "You said: " + input
         }
+    

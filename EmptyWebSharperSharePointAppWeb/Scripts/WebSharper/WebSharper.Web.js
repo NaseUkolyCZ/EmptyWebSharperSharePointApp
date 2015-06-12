@@ -16,10 +16,6 @@
        };
       },window,this.funcName);
       return f.apply(null,this.args);
-     },
-     get_Body1:function()
-     {
-      return this.get_Body();
      }
     })
    }

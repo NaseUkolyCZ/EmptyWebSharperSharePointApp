@@ -267,16 +267,16 @@
       JQueryEventSupport:Runtime.Class({
        OnBlur:function(f,el)
        {
-        return jQuery(el.get_Body()).bind("blur",function()
+        return jQuery(el.get_Body()).bind("blur",function(ev)
         {
-         return f(el);
+         return(f(el))(ev);
         });
        },
        OnChange:function(f,el)
        {
-        return jQuery(el.get_Body()).bind("change",function()
+        return jQuery(el.get_Body()).bind("change",function(ev)
         {
-         return f(el);
+         return(f(el))(ev);
         });
        },
        OnClick:function(f,el)
@@ -289,9 +289,9 @@
        },
        OnError:function(f,el)
        {
-        return jQuery(el.get_Body()).bind("error",function()
+        return jQuery(el.get_Body()).bind("error",function(ev)
         {
-         return f(el);
+         return(f(el))(ev);
         });
        },
        OnEvent:function(ev,f,el)
@@ -303,9 +303,9 @@
        },
        OnFocus:function(f,el)
        {
-        return jQuery(el.get_Body()).bind("focus",function()
+        return jQuery(el.get_Body()).bind("focus",function(ev)
         {
-         return f(el);
+         return(f(el))(ev);
         });
        },
        OnKeyDown:function(f,el)
@@ -340,9 +340,9 @@
        },
        OnLoad:function(f,el)
        {
-        return jQuery(el.get_Body()).bind("load",function()
+        return jQuery(el.get_Body()).bind("load",function(ev)
         {
-         return f(el);
+         return(f(el))(ev);
         });
        },
        OnMouse:function(name,f,el)
@@ -382,37 +382,37 @@
        },
        OnResize:function(f,el)
        {
-        return jQuery(el.get_Body()).bind("resize",function()
+        return jQuery(el.get_Body()).bind("resize",function(ev)
         {
-         return f(el);
+         return(f(el))(ev);
         });
        },
        OnScroll:function(f,el)
        {
-        return jQuery(el.get_Body()).bind("scroll",function()
+        return jQuery(el.get_Body()).bind("scroll",function(ev)
         {
-         return f(el);
+         return(f(el))(ev);
         });
        },
        OnSelect:function(f,el)
        {
-        return jQuery(el.get_Body()).bind("select",function()
+        return jQuery(el.get_Body()).bind("select",function(ev)
         {
-         return f(el);
+         return(f(el))(ev);
         });
        },
        OnSubmit:function(f,el)
        {
-        return jQuery(el.get_Body()).bind("submit",function()
+        return jQuery(el.get_Body()).bind("submit",function(ev)
         {
-         return f(el);
+         return(f(el))(ev);
         });
        },
        OnUnLoad:function(f,el)
        {
-        return jQuery(el.get_Body()).bind("unload",function()
+        return jQuery(el.get_Body()).bind("unload",function(ev)
         {
-         return f(el);
+         return(f(el))(ev);
         });
        }
       },{
