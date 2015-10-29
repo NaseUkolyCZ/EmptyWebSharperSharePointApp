@@ -1,20 +1,20 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmptyWebSharperSharePointApp", "EmptyWebSharperSharePointApp\EmptyWebSharperSharePointApp.csproj", "{996E08B7-A866-4E26-9E4B-DA3DF5F6E056}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmptyWebSharperSharePointAppWeb", "EmptyWebSharperSharePointAppWeb\EmptyWebSharperSharePointAppWeb.csproj", "{8240CE6F-F495-429A-982C-877E3C26301D}"
-EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "WebSharperApplication", "WebSharperApplication\WebSharperApplication.fsproj", "{D137ADB4-EA7E-4005-8573-35EF002245EE}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{AC45B5EA-84CC-4137-8F05-709845F60142}"
 	ProjectSection(SolutionItems) = preProject
 		.nuget\NuGet.Config = .nuget\NuGet.Config
 		.nuget\NuGet.exe = .nuget\NuGet.exe
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmptyWebSharperSharePointApp", "EmptyWebSharperSharePointApp\EmptyWebSharperSharePointApp.csproj", "{996E08B7-A866-4E26-9E4B-DA3DF5F6E056}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmptyWebSharperSharePointAppWeb", "EmptyWebSharperSharePointAppWeb\EmptyWebSharperSharePointAppWeb.csproj", "{8240CE6F-F495-429A-982C-877E3C26301D}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "WebSharperApplication", "WebSharperApplication\WebSharperApplication.fsproj", "{D137ADB4-EA7E-4005-8573-35EF002245EE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
