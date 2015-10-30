@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmptyWebSharperSharePointAp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmptyWebSharperSharePointAppWeb", "EmptyWebSharperSharePointAppWeb\EmptyWebSharperSharePointAppWeb.csproj", "{24BF4080-ED3E-43D1-9EFE-1ADDCC251CCC}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "WebSharperApplication", "WebSharperApplication\WebSharperApplication.fsproj", "{32E7056E-E2B8-46A4-AE68-0F49A76BA47A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +25,10 @@ Global
 		{24BF4080-ED3E-43D1-9EFE-1ADDCC251CCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{24BF4080-ED3E-43D1-9EFE-1ADDCC251CCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{24BF4080-ED3E-43D1-9EFE-1ADDCC251CCC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32E7056E-E2B8-46A4-AE68-0F49A76BA47A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32E7056E-E2B8-46A4-AE68-0F49A76BA47A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32E7056E-E2B8-46A4-AE68-0F49A76BA47A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32E7056E-E2B8-46A4-AE68-0F49A76BA47A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
