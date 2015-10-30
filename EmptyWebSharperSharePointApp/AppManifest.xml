@@ -2,7 +2,7 @@
 <!--Created:cb85b80c-f585-40ff-8bfc-12ff4d0e34a9-->
 <App xmlns="http://schemas.microsoft.com/sharepoint/2012/app/manifest"
      Name="EmptyWebSharperSharePointApp"
-     ProductID="{2780e15e-af7c-4d75-b5bb-ed6e7d7f80d4}"
+     ProductID="{af702564-cd53-4954-84b5-7dacd4f0c15f}"
      Version="1.0.0.0"
      SharePointMinVersion="16.0.0.0"
 >

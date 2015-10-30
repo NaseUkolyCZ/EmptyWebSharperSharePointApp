@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{61B50AB7-BA53-46DE-AD88-C5A82B1884FD}</ProjectGuid>
+    <ProjectGuid>{567621E4-2B18-4C87-A869-B37B23376502}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>EmptyWebSharperSharePointApp</RootNamespace>
@@ -17,11 +17,11 @@
     <MinimumOfficeToolsVersion>12.2</MinimumOfficeToolsVersion>
     <IncludeAssemblyInPackage>False</IncludeAssemblyInPackage>
     <ProjectMode>SharePointApp</ProjectMode>
-    <AppFeaturePartId>{50478a73-ed90-4384-8408-ad67132ca689}</AppFeaturePartId>
-    <WspPartId>{891f47fa-1ed9-4c20-8e05-c51e4ac53126}</WspPartId>
-    <WorkflowPartId>{38d31738-4b36-49d2-90fe-709ddacf1d26}</WorkflowPartId>
-    <CspkgPartId>{8e690490-7ec6-4427-aafa-84cc4e7b3f44}</CspkgPartId>
-    <SqlPackagePartId>{47439886-1a38-4981-a1ff-458fd230f613}</SqlPackagePartId>
+    <AppFeaturePartId>{898ad96c-83dc-4d94-945d-319033d96db7}</AppFeaturePartId>
+    <WspPartId>{4da45752-0591-4782-8320-7e1cce40d033}</WspPartId>
+    <WorkflowPartId>{52afb8d3-47fc-44aa-84e9-9d8cb3c72617}</WorkflowPartId>
+    <CspkgPartId>{00d8a6a3-4502-424f-a2fa-061c886b6494}</CspkgPartId>
+    <SqlPackagePartId>{297d6d98-9d92-432f-a235-078114efba2a}</SqlPackagePartId>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -54,7 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EmptyWebSharperSharePointAppWeb\EmptyWebSharperSharePointAppWeb.csproj">
-      <Project>{24BF4080-ED3E-43D1-9EFE-1ADDCC251CCC}</Project>
+      <Project>{43E6E128-920F-458B-83C0-AF3E405C346A}</Project>
       <Name>EmptyWebSharperSharePointAppWeb</Name>
       <Private>True</Private>
       <RoleType>Web</RoleType>

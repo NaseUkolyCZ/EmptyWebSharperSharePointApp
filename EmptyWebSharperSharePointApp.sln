@@ -3,11 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmptyWebSharperSharePointApp", "EmptyWebSharperSharePointApp\EmptyWebSharperSharePointApp.csproj", "{61B50AB7-BA53-46DE-AD88-C5A82B1884FD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmptyWebSharperSharePointApp", "EmptyWebSharperSharePointApp\EmptyWebSharperSharePointApp.csproj", "{567621E4-2B18-4C87-A869-B37B23376502}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmptyWebSharperSharePointAppWeb", "EmptyWebSharperSharePointAppWeb\EmptyWebSharperSharePointAppWeb.csproj", "{24BF4080-ED3E-43D1-9EFE-1ADDCC251CCC}"
-EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "WebSharperApplication", "WebSharperApplication\WebSharperApplication.fsproj", "{32E7056E-E2B8-46A4-AE68-0F49A76BA47A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmptyWebSharperSharePointAppWeb", "EmptyWebSharperSharePointAppWeb\EmptyWebSharperSharePointAppWeb.csproj", "{43E6E128-920F-458B-83C0-AF3E405C346A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,20 +13,16 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{61B50AB7-BA53-46DE-AD88-C5A82B1884FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{61B50AB7-BA53-46DE-AD88-C5A82B1884FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{61B50AB7-BA53-46DE-AD88-C5A82B1884FD}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{61B50AB7-BA53-46DE-AD88-C5A82B1884FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{61B50AB7-BA53-46DE-AD88-C5A82B1884FD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{61B50AB7-BA53-46DE-AD88-C5A82B1884FD}.Release|Any CPU.Deploy.0 = Release|Any CPU
-		{24BF4080-ED3E-43D1-9EFE-1ADDCC251CCC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{24BF4080-ED3E-43D1-9EFE-1ADDCC251CCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{24BF4080-ED3E-43D1-9EFE-1ADDCC251CCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{24BF4080-ED3E-43D1-9EFE-1ADDCC251CCC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{32E7056E-E2B8-46A4-AE68-0F49A76BA47A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{32E7056E-E2B8-46A4-AE68-0F49A76BA47A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{32E7056E-E2B8-46A4-AE68-0F49A76BA47A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{32E7056E-E2B8-46A4-AE68-0F49A76BA47A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{567621E4-2B18-4C87-A869-B37B23376502}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{567621E4-2B18-4C87-A869-B37B23376502}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{567621E4-2B18-4C87-A869-B37B23376502}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{567621E4-2B18-4C87-A869-B37B23376502}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{567621E4-2B18-4C87-A869-B37B23376502}.Release|Any CPU.Build.0 = Release|Any CPU
+		{567621E4-2B18-4C87-A869-B37B23376502}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{43E6E128-920F-458B-83C0-AF3E405C346A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43E6E128-920F-458B-83C0-AF3E405C346A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43E6E128-920F-458B-83C0-AF3E405C346A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43E6E128-920F-458B-83C0-AF3E405C346A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
