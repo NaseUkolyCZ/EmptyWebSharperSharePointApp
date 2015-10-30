@@ -1,13 +1,20 @@
-﻿<!DOCTYPE html>
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>Error</title>
+    @Styles.Render("~/Content/css")
 </head>
 <body>
-    <hgroup>
-        <h1>Error.</h1>
-        <h2>An error occurred while processing your request.</h2>
-    </hgroup>
+    <div class="container">
+        <div class="jumbotron">
+            <h2>An unexpected error has occurred.</h2>
+            <p>Please try again by launching the app installed on your site.</p>
+        </div>
+    </div>
 </body>
 </html>
