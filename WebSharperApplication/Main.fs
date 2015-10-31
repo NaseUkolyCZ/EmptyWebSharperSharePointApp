@@ -1,87 +1,58 @@
 namespace WebSharperApplication
 
-open WebSharper.Html.Server
 open WebSharper
 open WebSharper.Sitelets
+open WebSharper.UI.Next
+open WebSharper.UI.Next.Server
 
-type Action =
-    | Home
-    | About
+type EndPoint =
+    | [<EndPoint "/home2">] Home
+    | [<EndPoint "/about">] About
 
-module Controls =
+module Templating =
+    open WebSharper.UI.Next.Html
 
-    [<Sealed>]
-    type EntryPoint() =
-        inherit Web.Control()
+    type MainTemplate = Templating.Template<"Main.html">
 
-        [<JavaScript>]
-        override __.Body =
-            Client.Main() :> _
+    // Compute a menubar where the menu item for the given endpoint is active
+    let MenuBar (ctx: Context<EndPoint>) endpoint : Doc list =
+        let ( => ) txt act =
+             liAttr [if endpoint = act then yield attr.``class`` "active"] [
+                aAttr [attr.href (ctx.Link act)] [text txt]
+             ]
+        [
+            li ["Home" => EndPoint.Home]
+            li ["About" => EndPoint.About]
+        ]
 
-module Skin =
-    open System.Web
-
-    type Page =
-        {
-            Title : string
-            Body : list<Element>
-        }
-
-    let MainTemplate =
-        Content.Template<Page>("~/Main.html")
-            .With("title", fun x -> x.Title)
-            .With("body", fun x -> x.Body)
-
-    let WithTemplate title body : Content<Action> =
-        Content.WithTemplate MainTemplate <| fun context ->
-            {
-                Title = title
-                Body = body context
-            }
+    let Main ctx action title body =
+        Content.Page(
+            MainTemplate.Doc(
+                title = title,
+                menubar = MenuBar ctx action,
+                body = body
+            )
+        )
 
 module Site =
+    open WebSharper.UI.Next.Html
 
-    let ( => ) text url =
-        A [HRef url] -< [Text text]
-
-    let Links (ctx: Context<Action>) =
-        UL [
-            LI ["Home" => ctx.Link Home]
-            LI ["About" => ctx.Link About]
+    let HomePage ctx =
+        Templating.Main ctx EndPoint.Home "Home" [
+            h1 [text "Say Hi to the server!"]
+            div [client <@ Client.Main() @>]
         ]
 
-    let HomePage =
-        Skin.WithTemplate "HomePage" <| fun ctx ->
-            [
-                Div [Text "HOME"]
-                Div [new Controls.EntryPoint()]
-                Links ctx
-            ]
+    let AboutPage ctx =
+        Templating.Main ctx EndPoint.About "About" [
+            h1 [text "About"]
+            p [text "This is a template WebSharper client-server application."]
+        ]
 
-    let AboutPage =
-        Skin.WithTemplate "AboutPage" <| fun ctx ->
-            [
-                Div [Text "ABOUT"]
-                Links ctx
-            ]
-
+    [<Website>]
     let Main =
-        Sitelet.Sum [
-            Sitelet.Content "/" Home HomePage
-            Sitelet.Content "/About" About AboutPage
-        ]
-
-[<Sealed>]
-type Website() =
-    interface IWebsite<Action> with
-        member this.Sitelet = Site.Main
-        member this.Actions = [Home; About]
-
-type Global() =
-    inherit System.Web.HttpApplication()
-
-    member g.Application_Start(sender: obj, args: System.EventArgs) =
-        ()
-
-[<assembly: Website(typeof<Website>)>]
-do ()
+        Application.MultiPage (fun ctx endpoint ->
+            match endpoint with
+            | EndPoint.Home -> HomePage ctx
+            | EndPoint.About -> AboutPage ctx
+        )

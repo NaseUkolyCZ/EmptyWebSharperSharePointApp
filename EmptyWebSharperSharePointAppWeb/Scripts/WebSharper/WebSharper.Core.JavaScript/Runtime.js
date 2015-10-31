@@ -2,7 +2,7 @@
 //
 // This file is part of WebSharper
 //
-// Copyright (c) 2008-2014 IntelliFactory
+// Copyright (c) 2008-2015 IntelliFactory
 //
 // Licensed under the Apache License, Version 2.0 (the "License"); you
 // may not use this file except in compliance with the License.  You may
@@ -114,6 +114,7 @@ var IntelliFactory =
 
         Inherit:
             function (a, b) {
+		if (typeof b !== "function") return;
                 var p = a.prototype;
                 a.prototype = new b();
                 for (var f in p) {
@@ -216,4 +217,10 @@ if (!Date.now) {
     Date.now = function now() {
         return new Date().getTime();
     };
+}
+
+if (!Math.trunc) {
+    Math.trunc = function (x) {
+        return x < 0 ? Math.ceil(x) : Math.floor(x);
+    }
 }

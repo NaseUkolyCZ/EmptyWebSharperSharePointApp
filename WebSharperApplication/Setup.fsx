@@ -10,7 +10,7 @@ in particular adding a new item to the project is not possible.
 **Solution**: This will hopefully be addressed in future VS versions.
 
 **Workaround**: The issue with new project items can be worked around by adding
-appropriate registry keys. Executing this script does just that.
+appropriate registry keys. Executing this script does just that. Once executed, you can remove this file from your project.
 
 Credits: Daniel Mohl [1], Mark Seemann.
 
@@ -47,16 +47,22 @@ let AddRegistryKeys (product, key) =
 
 let InstallFSharpWebCapability () =
     [
-        "VWD Express 11", HKCU "Software\Microsoft\VWDExpress\11.0_Config\Projects\{349C5851-65DF-11DA-9384-00065B846F21}"
-        "VWD Express 12", HKCU "Software\Microsoft\VWDExpress\12.0_Config\Projects\{349C5851-65DF-11DA-9384-00065B846F21}"
-        "VS 11", HKCU "Software\Microsoft\VisualStudio\11.0_Config\Projects\{349C5851-65DF-11DA-9384-00065B846F21}"
-        "VS WinDesktop Express 12", HKCU "Software\Microsoft\VSWinDesktopExpress\12.0_Config\Projects\{349C5851-65DF-11DA-9384-00065B846F21}"
-        "VS 12", HKCU "Software\Microsoft\VisualStudio\12.0_Config\Projects\{349C5851-65DF-11DA-9384-00065B846F21}"
-        "VWD Express 11 (x64)", HKLM "SOFTWARE\Wow6432Node\Microsoft\VWDExpress\11.0\Projects\{349C5851-65DF-11DA-9384-00065B846F21}"
-        "VWD Express 12 (x64)", HKLM "SOFTWARE\Wow6432Node\Microsoft\VWDExpress\12.0\Projects\{349C5851-65DF-11DA-9384-00065B846F21}"
-        "VS 11 (x64)", HKLM "SOFTWARE\Wow6432Node\Microsoft\VisualStudio\11.0\Projects\{349C5851-65DF-11DA-9384-00065B846F21}"
-        "VS WinDesktop Express 12 (x64)", HKLM "SOFTWARE\Wow6432Node\Microsoft\VSWinDesktopExpress\12.0\Projects\{349C5851-65DF-11DA-9384-00065B846F21}"
-        "VS 12 (x64)", HKLM "SOFTWARE\Wow6432Node\Microsoft\VisualStudio\12.0\Projects\{349C5851-65DF-11DA-9384-00065B846F21}"
+        "VWD Express 11", HKCU @"Software\Microsoft\VWDExpress\11.0_Config\Projects\{349C5851-65DF-11DA-9384-00065B846F21}"
+        "VWD Express 12", HKCU @"Software\Microsoft\VWDExpress\12.0_Config\Projects\{349C5851-65DF-11DA-9384-00065B846F21}"
+        "VWD Express 14", HKCU @"Software\Microsoft\VWDExpress\14.0_Config\Projects\{349C5851-65DF-11DA-9384-00065B846F21}"
+        "VS 11", HKCU @"Software\Microsoft\VisualStudio\11.0_Config\Projects\{349C5851-65DF-11DA-9384-00065B846F21}"
+        "VS WinDesktop Express 12", HKCU @"Software\Microsoft\VSWinDesktopExpress\12.0_Config\Projects\{349C5851-65DF-11DA-9384-00065B846F21}"
+        "VS 12", HKCU @"Software\Microsoft\VisualStudio\12.0_Config\Projects\{349C5851-65DF-11DA-9384-00065B846F21}"
+        "VS WinDesktop Express 14", HKCU @"Software\Microsoft\VSWinDesktopExpress\14.0_Config\Projects\{349C5851-65DF-11DA-9384-00065B846F21}"
+        "VS 14", HKCU @"Software\Microsoft\VisualStudio\14.0_Config\Projects\{349C5851-65DF-11DA-9384-00065B846F21}"
+        "VWD Express 11 (x64)", HKLM @"SOFTWARE\Wow6432Node\Microsoft\VWDExpress\11.0\Projects\{349C5851-65DF-11DA-9384-00065B846F21}"
+        "VWD Express 12 (x64)", HKLM @"SOFTWARE\Wow6432Node\Microsoft\VWDExpress\12.0\Projects\{349C5851-65DF-11DA-9384-00065B846F21}"
+        "VWD Express 14 (x64)", HKLM @"SOFTWARE\Wow6432Node\Microsoft\VWDExpress\14.0\Projects\{349C5851-65DF-11DA-9384-00065B846F21}"
+        "VS 11 (x64)", HKLM @"SOFTWARE\Wow6432Node\Microsoft\VisualStudio\11.0\Projects\{349C5851-65DF-11DA-9384-00065B846F21}"
+        "VS WinDesktop Express 12 (x64)", HKLM @"SOFTWARE\Wow6432Node\Microsoft\VSWinDesktopExpress\12.0\Projects\{349C5851-65DF-11DA-9384-00065B846F21}"
+        "VS 12 (x64)", HKLM @"SOFTWARE\Wow6432Node\Microsoft\VisualStudio\12.0\Projects\{349C5851-65DF-11DA-9384-00065B846F21}"
+        "VS WinDesktop Express 14 (x64)", HKLM @"SOFTWARE\Wow6432Node\Microsoft\VSWinDesktopExpress\14.0\Projects\{349C5851-65DF-11DA-9384-00065B846F21}"
+        "VS 14 (x64)", HKLM @"SOFTWARE\Wow6432Node\Microsoft\VisualStudio\14.0\Projects\{349C5851-65DF-11DA-9384-00065B846F21}"
     ]
     |> List.iter AddRegistryKeys
 

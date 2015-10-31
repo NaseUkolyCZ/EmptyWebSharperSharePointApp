@@ -1,6 +1,6 @@
 (function()
 {
- var Global=this,Runtime=this.IntelliFactory.Runtime,Collections,BalancedTree,Operators,Arrays,Seq,List,T,JavaScript,JSModule,Enumerator,DictionaryUtil,Dictionary,Unchecked,FSharpMap,Pair,Option,MapUtil,FSharpSet,SetModule,SetUtil,Array,HashSetUtil,HashSetProxy,LinkedList,E,T1,ResizeArray,ResizeArrayProxy;
+ var Global=this,Runtime=this.IntelliFactory.Runtime,Collections,BalancedTree,Operators,Arrays,Seq,List,T,Seq1,JavaScript,JSModule,Enumerator,DictionaryUtil,Dictionary,Unchecked,FSharpMap,Pair,Option,MapUtil,FSharpSet,SetModule,SetUtil,Array,HashSetUtil,HashSetProxy,LinkedList,E,T1,ResizeArray,ResizeArrayProxy;
  Runtime.Define(Global,{
   WebSharper:{
    Collections:{
@@ -132,7 +132,7 @@
      OfSeq:function(data)
      {
       var data1;
-      data1=Arrays.sort(Seq.toArray(Seq.distinct(data)));
+      data1=Arrays.sort(Seq1.toArray(Seq.distinct(data)));
       return BalancedTree.Build(data1,0,data1.length-1);
      },
      Put:function(combine,k,t)
@@ -227,8 +227,8 @@
            }
           else
            {
-            source=Seq.append(BalancedTree.Enumerate(false,t.Left),BalancedTree.Enumerate(false,t.Right));
-            data=Seq.toArray(source);
+            source=Seq1.append(BalancedTree.Enumerate(false,t.Left),BalancedTree.Enumerate(false,t.Right));
+            data=Seq1.toArray(source);
             t1=BalancedTree.Build(data,0,data.length-1);
             _2=BalancedTree.Rebuild(spine,t1);
            }
@@ -451,7 +451,7 @@
      },
      Equals:function(other)
      {
-      return this.get_Count()===other.get_Count()?Seq.forall2(function(x)
+      return this.get_Count()===other.get_Count()?Seq1.forall2(function(x)
       {
        return function(y)
        {
@@ -470,12 +470,12 @@
        };
       };
       source=BalancedTree.Enumerate(false,this.tree);
-      s=Seq.map(mapping,source);
+      s=Seq1.map(mapping,source);
       return Enumerator.Get(s);
      },
      GetHashCode:function()
      {
-      return Unchecked.Hash(Seq.toArray(this));
+      return Unchecked.Hash(Seq1.toArray(this));
      },
      Remove:function(k)
      {
@@ -565,7 +565,7 @@
      },
      Equals:function(other)
      {
-      return this.get_Count()===other.get_Count()?Seq.forall2(function(x)
+      return this.get_Count()===other.get_Count()?Seq1.forall2(function(x)
       {
        return function(y)
        {
@@ -579,7 +579,7 @@
      },
      GetHashCode:function()
      {
-      return-1741749453+Unchecked.Hash(Seq.toArray(this));
+      return-1741749453+Unchecked.Hash(Seq1.toArray(this));
      },
      IsProperSubsetOf:function(s)
      {
@@ -591,7 +591,7 @@
      },
      IsSubsetOf:function(s)
      {
-      return Seq.forall(function(arg00)
+      return Seq1.forall(function(arg00)
       {
        return s.Contains(arg00);
       },this);
@@ -599,7 +599,7 @@
      IsSupersetOf:function(s)
      {
       var _this=this;
-      return Seq.forall(function(arg00)
+      return Seq1.forall(function(arg00)
       {
        return _this.Contains(arg00);
       },s);
@@ -610,7 +610,7 @@
      },
      add:function(x)
      {
-      return FSharpSet.New1(BalancedTree.OfSeq(Seq.append(this,x)));
+      return FSharpSet.New1(BalancedTree.OfSeq(Seq1.append(this,x)));
      },
      get_Count:function()
      {
@@ -624,11 +624,11 @@
      },
      get_MaximumElement:function()
      {
-      return Seq.head(BalancedTree.Enumerate(true,this.tree));
+      return Seq1.head(BalancedTree.Enumerate(true,this.tree));
      },
      get_MinimumElement:function()
      {
-      return Seq.head(BalancedTree.Enumerate(false,this.tree));
+      return Seq1.head(BalancedTree.Enumerate(false,this.tree));
      },
      get_Tree:function()
      {
@@ -744,7 +744,7 @@
        return other.Contains(arg00);
       };
       array=HashSetUtil.concat(this.data);
-      return Seq.forall(predicate,array);
+      return Seq1.forall(predicate,array);
      },
      IsSupersetOf:function(xs)
      {
@@ -753,7 +753,7 @@
       {
        return x.Contains(arg00);
       };
-      return Seq.forall(predicate,xs);
+      return Seq1.forall(predicate,xs);
      },
      Overlaps:function(xs)
      {
@@ -762,7 +762,7 @@
       {
        return x.Contains(arg00);
       };
-      return Seq.exists(predicate,xs);
+      return Seq1.exists(predicate,xs);
      },
      Remove:function(item)
      {
@@ -938,7 +938,7 @@
      },
      New1:function(comparer)
      {
-      return Runtime.New(this,HashSetProxy.New3(Seq.empty(),function(x)
+      return Runtime.New(this,HashSetProxy.New3(Seq1.empty(),function(x)
       {
        return function(y)
        {
@@ -951,7 +951,7 @@
      },
      New11:function()
      {
-      return Runtime.New(this,HashSetProxy.New3(Seq.empty(),function(x)
+      return Runtime.New(this,HashSetProxy.New3(Seq1.empty(),function(x)
       {
        return function(y)
        {
@@ -1232,7 +1232,7 @@
      },{
       New:function()
       {
-       return Runtime.New(this,T1.New1(Seq.empty()));
+       return Runtime.New(this,T1.New1(Seq1.empty()));
       },
       New1:function(coll)
       {
@@ -1279,7 +1279,7 @@
       {
        return(f(kv.K))(kv.V);
       };
-      return Seq.exists(predicate,m);
+      return Seq1.exists(predicate,m);
      },
      Filter:function(f,m)
      {
@@ -1289,8 +1289,8 @@
        return(f(kv.Key))(kv.Value);
       };
       source=BalancedTree.Enumerate(false,m.get_Tree());
-      source1=Seq.filter(predicate,source);
-      data=Seq.toArray(source1);
+      source1=Seq1.filter(predicate,source);
+      data=Seq1.toArray(source1);
       t=BalancedTree.Build(data,0,data.length-1);
       return FSharpMap.New(t);
      },
@@ -1306,7 +1306,7 @@
         $:0
        };
       };
-      return Seq.pick(chooser,m);
+      return Seq1.pick(chooser,m);
      },
      Fold:function(f,s,m)
      {
@@ -1319,7 +1319,7 @@
        };
       };
       source=BalancedTree.Enumerate(false,m.get_Tree());
-      return Seq.fold(folder,s,source);
+      return Seq1.fold(folder,s,source);
      },
      FoldBack:function(f,m,s)
      {
@@ -1332,7 +1332,7 @@
        };
       };
       source=BalancedTree.Enumerate(true,m.get_Tree());
-      return Seq.fold(folder,s,source);
+      return Seq1.fold(folder,s,source);
      },
      ForAll:function(f,m)
      {
@@ -1341,7 +1341,7 @@
       {
        return(f(kv.K))(kv.V);
       };
-      return Seq.forall(predicate,m);
+      return Seq1.forall(predicate,m);
      },
      Iterate:function(f,m)
      {
@@ -1350,7 +1350,7 @@
       {
        return(f(kv.K))(kv.V);
       };
-      return Seq.iter(action,m);
+      return Seq1.iter(action,m);
      },
      Map:function(f,m)
      {
@@ -1363,7 +1363,7 @@
        });
       };
       source=BalancedTree.Enumerate(false,m.get_Tree());
-      data=Seq.map(mapping,source);
+      data=Seq1.map(mapping,source);
       t=BalancedTree.OfSeq(data);
       return FSharpMap.New(t);
      },
@@ -1380,7 +1380,7 @@
         Value:v
        });
       };
-      data=Seq.map(mapping,a);
+      data=Seq1.map(mapping,a);
       t=BalancedTree.OfSeq(data);
       return FSharpMap.New(t);
      },
@@ -1391,7 +1391,7 @@
       {
        return(f(kv.Key))(kv.Value);
       };
-      array=Seq.toArray(BalancedTree.Enumerate(false,m.get_Tree()));
+      array=Seq1.toArray(BalancedTree.Enumerate(false,m.get_Tree()));
       patternInput=Arrays.partition(predicate,array);
       y=patternInput[1];
       x=patternInput[0];
@@ -1404,7 +1404,7 @@
       {
        return(f(kv.K))(kv.V);
       };
-      return Seq.pick(chooser,m);
+      return Seq1.pick(chooser,m);
      },
      ToSeq:function(m)
      {
@@ -1414,7 +1414,7 @@
        return[kv.Key,kv.Value];
       };
       source=BalancedTree.Enumerate(false,m.get_Tree());
-      return Seq.map(mapping,source);
+      return Seq1.map(mapping,source);
      },
      TryFind:function(k,m)
      {
@@ -1432,7 +1432,7 @@
         $:0
        };
       };
-      return Seq.tryPick(chooser,m);
+      return Seq1.tryPick(chooser,m);
      },
      TryPick:function(f,m)
      {
@@ -1441,16 +1441,16 @@
       {
        return(f(kv.K))(kv.V);
       };
-      return Seq.tryPick(chooser,m);
+      return Seq1.tryPick(chooser,m);
      }
     },
     MapUtil:{
      fromSeq:function(s)
      {
       var a;
-      a=Seq.toArray(Seq.delay(function()
+      a=Seq1.toArray(Seq1.delay(function()
       {
-       return Seq.collect(function(matchValue)
+       return Seq1.collect(function(matchValue)
        {
         var v,k;
         v=matchValue[1];
@@ -1491,7 +1491,7 @@
       AddRange:function(x)
       {
        var _this=this;
-       return Seq.iter(function(arg00)
+       return Seq1.iter(function(arg00)
        {
         return _this.Add(arg00);
        },x);
@@ -1531,7 +1531,7 @@
       InsertRange:function(index,items)
       {
        var value;
-       value=ResizeArray.splice(this.arr,index,0,Seq.toArray(items));
+       value=ResizeArray.splice(this.arr,index,0,Seq1.toArray(items));
        return;
       },
       RemoveAt:function(x)
@@ -1573,7 +1573,7 @@
      },{
       New:function(el)
       {
-       return Runtime.New(this,ResizeArrayProxy.New11(Seq.toArray(el)));
+       return Runtime.New(this,ResizeArrayProxy.New11(Seq1.toArray(el)));
       },
       New1:function()
       {
@@ -1601,12 +1601,12 @@
      Filter:function(f,s)
      {
       var data;
-      data=Seq.toArray(Seq.filter(f,s));
+      data=Seq1.toArray(Seq1.filter(f,s));
       return FSharpSet.New1(BalancedTree.Build(data,0,data.length-1));
      },
      FoldBack:function(f,a,s)
      {
-      return Seq.fold(function(s1)
+      return Seq1.fold(function(s1)
       {
        return function(x)
        {
@@ -1617,7 +1617,7 @@
      Partition:function(f,a)
      {
       var patternInput,y,x;
-      patternInput=Arrays.partition(f,Seq.toArray(a));
+      patternInput=Arrays.partition(f,Seq1.toArray(a));
       y=patternInput[1];
       x=patternInput[0];
       return[FSharpSet.New1(BalancedTree.OfSeq(x)),FSharpSet.New1(BalancedTree.OfSeq(y))];
@@ -1627,7 +1627,7 @@
      ofSeq:function(s)
      {
       var a;
-      a=Seq.toArray(s);
+      a=Seq1.toArray(s);
       Arrays.sortInPlace(a);
       return BalancedTree.Build(a,0,a.length-1);
      }
@@ -1641,9 +1641,10 @@
   BalancedTree=Runtime.Safe(Collections.BalancedTree);
   Operators=Runtime.Safe(Global.WebSharper.Operators);
   Arrays=Runtime.Safe(Global.WebSharper.Arrays);
-  Seq=Runtime.Safe(Global.WebSharper.Seq);
+  Seq=Runtime.Safe(Global.Seq);
   List=Runtime.Safe(Global.WebSharper.List);
   T=Runtime.Safe(List.T);
+  Seq1=Runtime.Safe(Global.WebSharper.Seq);
   JavaScript=Runtime.Safe(Global.WebSharper.JavaScript);
   JSModule=Runtime.Safe(JavaScript.JSModule);
   Enumerator=Runtime.Safe(Global.WebSharper.Enumerator);

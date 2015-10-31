@@ -1180,9 +1180,9 @@
               {
                return Concurrency.Return(null);
               });
-             }),function()
+             }),function(_arg2)
              {
-              return Concurrency.Return(asserter.ok(false,"Test threw an unexpected asynchronous exception"));
+              return Concurrency.Return(asserter.equal(_arg2,null,"Test threw an unexpected asynchronous exception"));
              });
             }),function()
             {
@@ -1201,7 +1201,7 @@
         }
         catch(e1)
         {
-         _=asserter.ok(false,"Test threw an unexpected synchronous exception");
+         _=asserter.equal(e1,null,"Test threw an unexpected synchronous exception");
         }
         return _;
        });
@@ -1219,14 +1219,7 @@
      {
       return TestCategoryBuilder.New(name);
      },
-     TestCategoryBuilder:Runtime.Class({
-      Run:function(s)
-      {
-       QUnit.module(s.name);
-       s.run.call(null,null);
-       return s;
-      }
-     },{
+     TestCategoryBuilder:Runtime.Class({},{
       New:function(name)
       {
        var r;

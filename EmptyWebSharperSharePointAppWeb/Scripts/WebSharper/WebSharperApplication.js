@@ -1,68 +1,55 @@
 (function()
 {
- var Global=this,Runtime=this.IntelliFactory.Runtime,List,Html,Client,Attr,Tags,WebSharperApplication,Client1,EventsPervasives,Concurrency,Remoting,AjaxRemotingProvider;
+ var Global=this,Runtime=this.IntelliFactory.Runtime,UI,Next,Var,Submitter,Remoting,AjaxRemotingProvider,Concurrency,View,List,Doc,T,AttrProxy;
  Runtime.Define(Global,{
   WebSharperApplication:{
    Client:{
     Main:function()
     {
-     var x,input,x1,label,arg10,arg101,x2,arg00;
-     x=List.ofArray([Attr.Attr().NewAttr("value","")]);
-     input=Tags.Tags().NewTag("input",x);
-     x1=List.ofArray([Tags.Tags().text("")]);
-     label=Tags.Tags().NewTag("div",x1);
-     arg101=List.ofArray([Tags.Tags().text("Click")]);
-     x2=Tags.Tags().NewTag("button",arg101);
-     arg00=function()
+     var rvInput,submit,arg00,arg10,vReversed,arg20,arg201,arg202,arg203;
+     rvInput=Var.Create("");
+     submit=Submitter.CreateOption(rvInput.get_View());
+     arg00=function(_arg1)
      {
-      return function()
+      return _arg1.$==1?AjaxRemotingProvider.Async("WebSharperApplication:0",[_arg1.$0]):Concurrency.Delay(function()
       {
-       return Client1.Start(input.get_Value(),function(out)
-       {
-        return label.set_Text(out);
-       });
-      };
-     };
-     EventsPervasives.Events().OnClick(arg00,x2);
-     arg10=List.ofArray([input,label,x2]);
-     return Tags.Tags().NewTag("div",arg10);
-    },
-    Start:function(input,k)
-    {
-     return Concurrency.Start(Concurrency.Delay(function()
-     {
-      return Concurrency.Bind(AjaxRemotingProvider.Async("WebSharperApplication:0",[input]),function(_arg1)
-      {
-       return Concurrency.Return(k(_arg1));
+       return Concurrency.Return("");
       });
-     }),{
+     };
+     arg10=submit.get_View();
+     vReversed=View.MapAsync(arg00,arg10);
+     arg201=function()
+     {
+      return submit.Trigger();
+     };
+     arg202=Runtime.New(T,{
       $:0
      });
+     arg203=List.ofArray([Doc.TextView(vReversed)]);
+     arg20=List.ofArray([Doc.Input(Runtime.New(T,{
+      $:0
+     }),rvInput),Doc.Button("Send",Runtime.New(T,{
+      $:0
+     }),arg201),Doc.Element("hr",[],arg202),Doc.Element("h4",List.ofArray([AttrProxy.Create("class","text-muted")]),List.ofArray([Doc.TextNode("The server responded:")])),Doc.Element("div",List.ofArray([AttrProxy.Create("class","jumbotron")]),List.ofArray([Doc.Element("h1",[],arg203)]))]);
+     return Doc.Element("div",[],arg20);
     }
-   },
-   Controls:{
-    EntryPoint:Runtime.Class({
-     get_Body:function()
-     {
-      return Client1.Main();
-     }
-    })
    }
   }
  });
  Runtime.OnInit(function()
  {
-  List=Runtime.Safe(Global.WebSharper.List);
-  Html=Runtime.Safe(Global.WebSharper.Html);
-  Client=Runtime.Safe(Html.Client);
-  Attr=Runtime.Safe(Client.Attr);
-  Tags=Runtime.Safe(Client.Tags);
-  WebSharperApplication=Runtime.Safe(Global.WebSharperApplication);
-  Client1=Runtime.Safe(WebSharperApplication.Client);
-  EventsPervasives=Runtime.Safe(Client.EventsPervasives);
-  Concurrency=Runtime.Safe(Global.WebSharper.Concurrency);
+  UI=Runtime.Safe(Global.WebSharper.UI);
+  Next=Runtime.Safe(UI.Next);
+  Var=Runtime.Safe(Next.Var);
+  Submitter=Runtime.Safe(Next.Submitter);
   Remoting=Runtime.Safe(Global.WebSharper.Remoting);
-  return AjaxRemotingProvider=Runtime.Safe(Remoting.AjaxRemotingProvider);
+  AjaxRemotingProvider=Runtime.Safe(Remoting.AjaxRemotingProvider);
+  Concurrency=Runtime.Safe(Global.WebSharper.Concurrency);
+  View=Runtime.Safe(Next.View);
+  List=Runtime.Safe(Global.WebSharper.List);
+  Doc=Runtime.Safe(Next.Doc);
+  T=Runtime.Safe(List.T);
+  return AttrProxy=Runtime.Safe(Next.AttrProxy);
  });
  Runtime.OnLoad(function()
  {
