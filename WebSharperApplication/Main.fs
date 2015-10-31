@@ -6,7 +6,7 @@ open WebSharper.UI.Next
 open WebSharper.UI.Next.Server
 
 type EndPoint =
-    | [<EndPoint "/home2">] Home
+    | [<EndPoint "/">] Home
     | [<EndPoint "/about">] About
 
 module Templating =
