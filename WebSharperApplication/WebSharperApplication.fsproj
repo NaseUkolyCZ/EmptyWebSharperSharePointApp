@@ -120,6 +120,13 @@
       <Private>True</Private>
     </Reference>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SharePointContext\SharePointContext.csproj">
+      <Name>SharePointContext</Name>
+      <Project>{cbc3ee70-ab96-4463-a41f-af38daba0a50}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+  </ItemGroup>
   <!-- F# targets -->
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '11.0'">
