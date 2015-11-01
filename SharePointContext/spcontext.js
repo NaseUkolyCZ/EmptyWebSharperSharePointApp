@@ -1,23 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿(function (window, undefined) {
 
-namespace SharePointContext
-{
-    public class JavaScript
-    {
-        public const String Content = @"
-<script type='text/javascript'>
-(function (window, undefined) {
-
-    ""use strict"";
+    "use strict";
 
     var $ = window.jQuery;
     var document = window.document;
 
     // SPHostUrl parameter name
-    var SPHostUrlKey = ""SPHostUrl"";
+    var SPHostUrlKey = "SPHostUrl";
 
     // Gets SPHostUrl from the current URL and appends it as query string to the links which point to current domain in the page.
     $(document).ready(function () {
@@ -33,7 +22,7 @@ namespace SharePointContext
 
     // Appends SPHostUrl as query string to all the links which point to current domain.
     function appendSPHostUrlToLinks(spHostUrl, currentAuthority) {
-        $(""a"")
+        $("a")
             .filter(function () {
                 var authority = getAuthorityFromUrl(this.href);
                 if (!authority && /^#|:/.test(this.href)) {
@@ -45,10 +34,10 @@ namespace SharePointContext
             .each(function () {
                 if (!getSPHostUrlFromQueryString(this.search)) {
                     if (this.search.length > 0) {
-                        this.search += ""&"" + SPHostUrlKey + ""="" + spHostUrl;
+                        this.search += "&" + SPHostUrlKey + "=" + spHostUrl;
                     }
                     else {
-                        this.search = ""?"" + SPHostUrlKey + ""="" + spHostUrl;
+                        this.search = "?" + SPHostUrlKey + "=" + spHostUrl;
                     }
                 }
             });
@@ -57,14 +46,14 @@ namespace SharePointContext
     // Gets SPHostUrl from the given query string.
     function getSPHostUrlFromQueryString(queryString) {
         if (queryString) {
-            if (queryString[0] === ""?"") {
+            if (queryString[0] === "?") {
                 queryString = queryString.substring(1);
             }
 
-            var keyValuePairArray = queryString.split(""&"");
+            var keyValuePairArray = queryString.split("&");
 
             for (var i = 0; i < keyValuePairArray.length; i++) {
-                var currentKeyValuePair = keyValuePairArray[i].split(""="");
+                var currentKeyValuePair = keyValuePairArray[i].split("=");
 
                 if (currentKeyValuePair.length > 1 && currentKeyValuePair[0] == SPHostUrlKey) {
                     return currentKeyValuePair[1];
@@ -90,17 +79,13 @@ namespace SharePointContext
     // Hence, when user bookmarks the url, SPHasRedirectedToSharePoint will not be included.
     // Note that modifying window.location.search will cause an additional request to server.
     function ensureSPHasRedirectedToSharePointRemoved() {
-        var SPHasRedirectedToSharePointParam = ""&SPHasRedirectedToSharePoint=1"";
+        var SPHasRedirectedToSharePointParam = "&SPHasRedirectedToSharePoint=1";
 
         var queryString = window.location.search;
 
         if (queryString.indexOf(SPHasRedirectedToSharePointParam) >= 0) {
-            window.location.search = queryString.replace(SPHasRedirectedToSharePointParam, """");
+            window.location.search = queryString.replace(SPHasRedirectedToSharePointParam, "");
         }
     }
 
 })(window);
-</script>
-        ";
-    }
-}
