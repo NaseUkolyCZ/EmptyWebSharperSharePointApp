@@ -7,7 +7,7 @@ using System.Security.Principal;
 using System.Web;
 using System.Web.Configuration;
 
-namespace EmptyWebSharperSharePointAppWeb
+namespace SharePointContext
 {
     /// <summary>
     /// Encapsulates all the information from SharePoint.

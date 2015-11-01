@@ -1,9 +1,10 @@
-namespace WebSharperApplication
+namespace WebSharperApplication 
 
 open WebSharper
 open WebSharper.Sitelets
 open WebSharper.UI.Next
 open WebSharper.UI.Next.Server
+open SharePointContext
 
 type EndPoint =
     | [<EndPoint "/">] Home
@@ -30,7 +31,8 @@ module Templating =
             MainTemplate.Doc(
                 title = title,
                 menubar = MenuBar ctx action,
-                body = body
+                body = body,
+                my_scripts = [ Doc.Verbatim JavaScript.Content ]
             )
         )
 
