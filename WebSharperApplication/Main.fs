@@ -1,10 +1,16 @@
-namespace WebSharperApplication
+namespace WebSharperApplication 
 
 open WebSharper
 open WebSharper.Sitelets
 open WebSharper.UI.Next
 open WebSharper.UI.Next.Server
+open SharePointContext
+open System.Web
+open System.Linq.Expressions
 
+type Expr = 
+  static member Quote<'a>(e:Expression<System.Func<'a, obj>>) = e
+  
 type EndPoint =
     | [<EndPoint "/">] Home
     | [<EndPoint "/about">] About
@@ -30,16 +36,28 @@ module Templating =
             MainTemplate.Doc(
                 title = title,
                 menubar = MenuBar ctx action,
-                body = body
+                body = body,
+                my_scripts = [ Doc.Verbatim JavaScript.Content ]
             )
         )
 
 module Site =
     open WebSharper.UI.Next.Html
 
+    let SharePointContextUser () =
+        let spContext = SharePointContextProvider.Current.GetSharePointContext(HttpContext.Current)
+        use clientContext = spContext.CreateUserClientContextForSPHost()
+        let spUser = clientContext.Web.CurrentUser;
+        clientContext.Load<Microsoft.SharePoint.Client.User>(
+            spUser, 
+            Expr.Quote<Microsoft.SharePoint.Client.User>( fun user -> upcast user.Title) 
+        );
+        clientContext.ExecuteQuery();
+        spUser
+
     let HomePage ctx =
         Templating.Main ctx EndPoint.Home "Home" [
-            h1 [text "Say Hi to the server!"]
+            h1 [text (sprintf "%s, say hi to the server!" (SharePointContextUser().Title) ) ]
             div [client <@ Client.Main() @>]
         ]
 

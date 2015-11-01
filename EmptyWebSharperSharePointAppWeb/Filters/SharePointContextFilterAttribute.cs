@@ -1,5 +1,6 @@
 using System;
 using System.Web.Mvc;
+using SharePointContext;
 
 namespace EmptyWebSharperSharePointAppWeb
 {
