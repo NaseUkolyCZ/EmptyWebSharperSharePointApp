@@ -5,7 +5,12 @@ open WebSharper.Sitelets
 open WebSharper.UI.Next
 open WebSharper.UI.Next.Server
 open SharePointContext
+open System.Web
+open System.Linq.Expressions
 
+type Expr = 
+  static member Quote(e:Expression<System.Func<Microsoft.SharePoint.Client.User, obj>>) = e
+  
 type EndPoint =
     | [<EndPoint "/">] Home
     | [<EndPoint "/about">] About
@@ -38,6 +43,20 @@ module Templating =
 
 module Site =
     open WebSharper.UI.Next.Html
+
+    let SharePointContext ctx =
+        let spContext = SharePointContextProvider.Current.GetSharePointContext(HttpContext.Current)
+        use clientContext = spContext.CreateUserClientContextForSPHost()
+        let spUser = clientContext.Web.CurrentUser;
+        let userTitle = 0
+        clientContext.Load<Microsoft.SharePoint.Client.User>(
+            spUser, 
+            Expr.Quote( 
+                fun user -> 
+                    upcast user.Title) 
+            );
+        clientContext.ExecuteQuery();
+        spUser.Title
 
     let HomePage ctx =
         Templating.Main ctx EndPoint.Home "Home" [
