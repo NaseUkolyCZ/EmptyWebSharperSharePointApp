@@ -41,5 +41,7 @@ NUGET
     WebSharper.AspNetMvc (3.6.9.47)
       Microsoft.AspNet.Mvc (>= 4.0 < 6.0)
       WebSharper (>= 3.6.12.235)
+    WebSharper.Testing (3.6.14.237)
+      WebSharper (>= 3.6.14.237)
     WebSharper.UI.Next (3.6.15.211)
       WebSharper (>= 3.6.12.235)

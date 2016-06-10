@@ -1,6 +1,6 @@
 (function()
 {
- var Global=this,Runtime=this.IntelliFactory.Runtime,Unchecked,Seq,Option,Control,Disposable,Arrays,FSharpEvent,Util,Event,Event1,Collections,ResizeArray,ResizeArrayProxy,EventModule,HotStream,HotStream1,Concurrency,Operators,Error,setTimeout,clearTimeout,LinkedList,T,MailboxProcessor,Observable,Observer,Ref,Observable1,List,T1,Observer1;
+ var Global=this,Runtime=this.IntelliFactory.Runtime,Unchecked,Seq,Option,Control,Disposable,Arrays,FSharpEvent,Util,Event,Event1,Collections,ResizeArray,ResizeArrayProxy,EventModule,HotStream,HotStream1,Concurrency,Operators,TimeoutException,setTimeout,clearTimeout,LinkedList,T,MailboxProcessor,Observable,Observer,Ref,Observable1,List,T1,Observer1;
  Runtime.Define(Global,{
   WebSharper:{
    Control:{
@@ -279,7 +279,7 @@
          }
         else
          {
-          _=Operators.Raise(new Error("TimeoutException"));
+          _=Operators.Raise(TimeoutException.New());
          }
         return Concurrency.Return(_);
        });
@@ -366,7 +366,7 @@
          }
         else
          {
-          _=Operators.Raise(new Error("TimeoutException"));
+          _=Operators.Raise(TimeoutException.New());
          }
         return Concurrency.Return(_);
        });
@@ -387,7 +387,7 @@
          }
         else
          {
-          _=Operators.Raise(new Error("TimeoutException"));
+          _=Operators.Raise(TimeoutException.New());
          }
         return Concurrency.Return(_);
        });
@@ -1446,7 +1446,7 @@
   HotStream1=Runtime.Safe(HotStream.HotStream);
   Concurrency=Runtime.Safe(Global.WebSharper.Concurrency);
   Operators=Runtime.Safe(Global.WebSharper.Operators);
-  Error=Runtime.Safe(Global.Error);
+  TimeoutException=Runtime.Safe(Global.WebSharper.TimeoutException);
   setTimeout=Runtime.Safe(Global.setTimeout);
   clearTimeout=Runtime.Safe(Global.clearTimeout);
   LinkedList=Runtime.Safe(Collections.LinkedList);

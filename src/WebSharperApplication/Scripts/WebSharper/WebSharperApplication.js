@@ -1,6 +1,6 @@
 (function()
 {
- var Global=this,Runtime=this.IntelliFactory.Runtime,UI,Next,Var,Submitter,Remoting,AjaxRemotingProvider,Concurrency,View,List,Doc,T,AttrProxy;
+ var Global=this,Runtime=this.IntelliFactory.Runtime,UI,Next,Var,Submitter1,Remoting,AjaxRemotingProvider,Concurrency,View,List,Doc,T,AttrProxy;
  Runtime.Define(Global,{
   WebSharperApplication:{
    Client:{
@@ -8,7 +8,7 @@
     {
      var rvInput,submit,arg00,arg10,vReversed,arg20,arg201,arg202,arg203;
      rvInput=Var.Create("");
-     submit=Submitter.CreateOption(rvInput.get_View());
+     submit=Submitter1.CreateOption(rvInput.get_View());
      arg00=function(_arg1)
      {
       return _arg1.$==1?AjaxRemotingProvider.Async("WebSharperApplication:0",[_arg1.$0]):Concurrency.Delay(function()
@@ -41,7 +41,7 @@
   UI=Runtime.Safe(Global.WebSharper.UI);
   Next=Runtime.Safe(UI.Next);
   Var=Runtime.Safe(Next.Var);
-  Submitter=Runtime.Safe(Next.Submitter);
+  Submitter1=Runtime.Safe(Next.Submitter1);
   Remoting=Runtime.Safe(Global.WebSharper.Remoting);
   AjaxRemotingProvider=Runtime.Safe(Remoting.AjaxRemotingProvider);
   Concurrency=Runtime.Safe(Global.WebSharper.Concurrency);

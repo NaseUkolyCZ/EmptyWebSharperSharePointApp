@@ -1,6 +1,6 @@
 (function()
 {
- var Global=this,Runtime=this.IntelliFactory.Runtime,Unchecked,Array,Arrays,Operators,List,Enumerator,T,Enumerable,Seq,Seq1,Arrays1,Ref,Activator,document,jQuery,Json,JSON,JavaScript,JSModule,AggregateException,Exception,ArgumentException,Number,IndexOutOfRangeException,List1,Arrays2D,Concurrency,Option,clearTimeout,setTimeout,CancellationTokenSource,Char,Util,Lazy,OperationCanceledException,Date,console,Scheduler,HtmlContentExtensions,SingleNode,InvalidOperationException,T1,MatchFailureException,Math,Strings,PrintfHelpers,Remoting,XhrProvider,AsyncProxy,AjaxRemotingProvider,window,String,RegExp;
+ var Global=this,Runtime=this.IntelliFactory.Runtime,Unchecked,Array,Arrays,Operators,List,Enumerator,T,Enumerable,Seq,Seq1,Arrays1,Ref,Activator,document,jQuery,Json,JSON,JavaScript,JSModule,AggregateException,Exception,ArgumentException,Number,IndexOutOfRangeException,List1,Arrays2D,Concurrency,Option,clearTimeout,setTimeout,CancellationTokenSource,Char,Util,Lazy,OperationCanceledException,Date,console,TimeoutException,Scheduler,HtmlContentExtensions,SingleNode,InvalidOperationException,T1,MatchFailureException,Math,Strings,PrintfHelpers,Remoting,XhrProvider,AsyncProxy,AjaxRemotingProvider,window,String,RegExp;
  Runtime.Define(Global,{
   Arrays:{
    contains:function(item,arr)
@@ -1844,7 +1844,7 @@
     }
    }),
    Concurrency:{
-    AwaitEvent:function(e)
+    AwaitEvent:function(e,ca)
     {
      var r;
      r=function(c)
@@ -1872,16 +1872,25 @@
       {
        return Concurrency.Register(c.ct,function()
        {
-        var action;
-        Lazy.Force(sub1).Dispose();
-        action=function()
-        {
-         return c.k.call(null,{
-          $:2,
-          $0:OperationCanceledException.New()
-         });
-        };
-        return Concurrency.scheduler().Fork(action);
+        var _,ca1,action;
+        if(ca.$==1)
+         {
+          ca1=ca.$0;
+          _=ca1(null);
+         }
+        else
+         {
+          Lazy.Force(sub1).Dispose();
+          action=function()
+          {
+           return c.k.call(null,{
+            $:2,
+            $0:OperationCanceledException.New()
+           });
+          };
+          _=Concurrency.scheduler().Fork(action);
+         }
+        return _;
        });
       };
       creg1=Lazy.Create(creg);
@@ -2358,51 +2367,109 @@
      {
      },ctOpt);
     },
-    StartChild:function(r)
+    StartChild:function(r,t)
     {
      var r1;
      r1=function(c)
      {
-      var cached,queue,action,r2,r21;
+      var inTime,cached,queue,tReg,_,timeout,arg0,action,r3,r21;
+      inTime=[true];
       cached=[{
        $:0
       }];
       queue=[];
+      if(t.$==1)
+       {
+        timeout=t.$0;
+        arg0=setTimeout(function()
+        {
+         var err;
+         inTime[0]=false;
+         err={
+          $:1,
+          $0:TimeoutException.New()
+         };
+         while(queue.length>0)
+          {
+           (queue.shift())(err);
+          }
+         return;
+        },timeout);
+        _={
+         $:1,
+         $0:arg0
+        };
+       }
+      else
+       {
+        _={
+         $:0
+        };
+       }
+      tReg=_;
       action=function()
       {
        return r({
         k:function(res)
         {
-         cached[0]={
-          $:1,
-          $0:res
-         };
-         while(queue.length>0)
+         var _1,_2,r2;
+         if(inTime[0])
           {
-           (queue.shift())(res);
+           cached[0]={
+            $:1,
+            $0:res
+           };
+           if(tReg.$==1)
+            {
+             r2=tReg.$0;
+             _2=clearTimeout(r2);
+            }
+           else
+            {
+             _2=null;
+            }
+           while(queue.length>0)
+            {
+             (queue.shift())(res);
+            }
           }
-         return;
+         else
+          {
+           _1=null;
+          }
+         return _1;
         },
         ct:c.ct
        });
       };
       Concurrency.scheduler().Fork(action);
-      r2=function(c2)
+      r3=function(c2)
       {
-       var matchValue,_,x;
-       matchValue=cached[0];
-       if(matchValue.$==0)
+       var _1,matchValue,_2,x;
+       if(inTime[0])
         {
-         _=queue.push(c2.k);
+         matchValue=cached[0];
+         if(matchValue.$==0)
+          {
+           _2=queue.push(c2.k);
+          }
+         else
+          {
+           x=matchValue.$0;
+           _2=c2.k.call(null,x);
+          }
+         _1=_2;
         }
        else
         {
-         x=matchValue.$0;
-         _=c2.k.call(null,x);
+         _1=c2.k.call(null,{
+          $:1,
+          $0:TimeoutException.New()
+         });
         }
-       return _;
+       return _1;
       };
-      r21=Concurrency.checkCancel(r2);
+      r21=Concurrency.checkCancel(r3);
       return c.k.call(null,{
        $:0,
        $0:r21
@@ -3099,21 +3166,6 @@
      get_Length:function()
      {
       return Seq.length(this);
-     }
-    },{
-     Construct:function(head,tail)
-     {
-      return Runtime.New(T1,{
-       $:1,
-       $0:head,
-       $1:tail
-      });
-     },
-     get_Nil:function()
-     {
-      return Runtime.New(T1,{
-       $:0
-      });
      }
     }),
     append:function(x,y)
@@ -6077,6 +6129,11 @@
      var $0=this,$this=this;
      return $x==null||$x=="";
     },
+    IsNullOrWhiteSpace:function($x)
+    {
+     var $0=this,$this=this;
+     return $x==null||(/^\s*$/).test($x);
+    },
     Join:function($sep,$values)
     {
      var $0=this,$this=this;
@@ -6277,6 +6334,16 @@
      });
     }
    },
+   TimeoutException:Runtime.Class({},{
+    New:function()
+    {
+     return Runtime.New(this,TimeoutException.New1("The operation has timed out."));
+    },
+    New1:function(message)
+    {
+     return Runtime.New(this,Exception.New1(message));
+    }
+   }),
    Unchecked:{
     Compare:function(a,b)
     {
@@ -6595,6 +6662,7 @@
   OperationCanceledException=Runtime.Safe(Global.WebSharper.OperationCanceledException);
   Date=Runtime.Safe(Global.Date);
   console=Runtime.Safe(Global.console);
+  TimeoutException=Runtime.Safe(Global.WebSharper.TimeoutException);
   Scheduler=Runtime.Safe(Concurrency.Scheduler);
   HtmlContentExtensions=Runtime.Safe(Global.WebSharper.HtmlContentExtensions);
   SingleNode=Runtime.Safe(HtmlContentExtensions.SingleNode);
@@ -6620,6 +6688,7 @@
   Runtime.Inherit(InvalidOperationException,Exception);
   Runtime.Inherit(MatchFailureException,Exception);
   Runtime.Inherit(OperationCanceledException,Exception);
+  Runtime.Inherit(TimeoutException,Exception);
   Remoting.EndPoint();
   Remoting.AjaxProvider();
   Concurrency.scheduler();
