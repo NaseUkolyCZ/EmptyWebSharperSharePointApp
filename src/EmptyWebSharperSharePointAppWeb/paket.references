@@ -20,4 +20,6 @@ Respond
 WebGrease
 WebSharper
 WebSharper.AspNetMvc
+WebSharper.Testing
+
 

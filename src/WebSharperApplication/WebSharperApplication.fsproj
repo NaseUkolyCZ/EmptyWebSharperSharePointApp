@@ -112,6 +112,37 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
+  <ItemGroup>
+    <Compile Include="Remoting.fs" />
+    <Compile Include="Client.fs" />
+    <Compile Include="Main.fs" />
+    <Content Include="Main.html" />
+    <Content Include="Web.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Global.asax" />
+    <Compile Include="Global.asax.fs" />
+    <Content Include="Setup.fsx" />
+    <Content Include="paket.references" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="mscorlib" />
+    <Reference Include="System" />
+    <Reference Include="System.Data.DataSetExtensions.dll" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.ApplicationServices.dll" />
+    <Reference Include="System.Web.DynamicData.dll" />
+    <Reference Include="System.Web.Entity.dll" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq.dll" />
+    <ProjectReference Include="..\SharePointContext\SharePointContext.csproj">
+      <Name>SharePointContext</Name>
+      <Project>{cbc3ee70-ab96-4463-a41f-af38daba0a50}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+  </ItemGroup>
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETCore'">
       <ItemGroup>
@@ -559,35 +590,4 @@
     </When>
   </Choose>
   <Import Project="..\..\packages\build\WebSharper\build\WebSharper.targets" Condition="Exists('..\..\packages\build\WebSharper\build\WebSharper.targets')" Label="Paket" />
-  <ItemGroup>
-    <Compile Include="Remoting.fs" />
-    <Compile Include="Client.fs" />
-    <Compile Include="Main.fs" />
-    <Content Include="Main.html" />
-    <Content Include="Web.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Global.asax" />
-    <Compile Include="Global.asax.fs" />
-    <Content Include="Setup.fsx" />
-    <Content Include="paket.references" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="mscorlib" />
-    <Reference Include="System" />
-    <Reference Include="System.Data.DataSetExtensions.dll" />
-    <Reference Include="System.Numerics" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Web.ApplicationServices.dll" />
-    <Reference Include="System.Web.DynamicData.dll" />
-    <Reference Include="System.Web.Entity.dll" />
-    <Reference Include="System.Web.Extensions" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq.dll" />
-    <ProjectReference Include="..\SharePointContext\SharePointContext.csproj">
-      <Name>SharePointContext</Name>
-      <Project>{cbc3ee70-ab96-4463-a41f-af38daba0a50}</Project>
-      <Private>True</Private>
-    </ProjectReference>
-  </ItemGroup>
 </Project>

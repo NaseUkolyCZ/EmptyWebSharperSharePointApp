@@ -185,11 +185,6 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="packages.config">
-      <SubType>Designer</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\SharePointContext\SharePointContext.csproj">
       <Project>{cbc3ee70-ab96-4463-a41f-af38daba0a50}</Project>
       <Name>SharePointContext</Name>
@@ -241,6 +236,9 @@
   </Target>
   <Target Name="AfterBuild">
   </Target> -->
+  <ItemGroup>
+    <Content Include="paket.references" />
+  </ItemGroup>
   <ItemGroup>
     <Reference Include="Antlr3.Runtime">
       <HintPath>..\..\packages\build\Antlr\lib\Antlr3.Runtime.dll</HintPath>
@@ -875,6 +873,17 @@
       <ItemGroup>
         <Reference Include="WebSharper.AspNetMvc">
           <HintPath>..\..\packages\build\WebSharper.AspNetMvc\lib\net40\WebSharper.AspNetMvc.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.0' Or $(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1' Or $(TargetFrameworkVersion) == 'v4.5.2' Or $(TargetFrameworkVersion) == 'v4.5.3' Or $(TargetFrameworkVersion) == 'v4.6' Or $(TargetFrameworkVersion) == 'v4.6.1' Or $(TargetFrameworkVersion) == 'v4.6.2')">
+      <ItemGroup>
+        <Reference Include="WebSharper.Testing">
+          <HintPath>..\..\packages\build\WebSharper.Testing\lib\net40\WebSharper.Testing.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
