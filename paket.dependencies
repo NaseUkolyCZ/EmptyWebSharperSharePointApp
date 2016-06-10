@@ -25,4 +25,4 @@ group Build
   nuget WebSharper
   nuget WebSharper.AspNetMvc
   nuget Microsoft.SharePointOnline.CSOM
-  
+  nuget WebSharper.UI.Next
