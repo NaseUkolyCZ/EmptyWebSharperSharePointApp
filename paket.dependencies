@@ -24,3 +24,5 @@ group Build
   nuget WebGrease
   nuget WebSharper
   nuget WebSharper.AspNetMvc
+  nuget Microsoft.SharePointOnline.CSOM
+  
