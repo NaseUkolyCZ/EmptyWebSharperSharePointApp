@@ -1,0 +1,5 @@
+group Build
+Microsoft.SharePointOnline.CSOM
+WebSharper
+WebSharper.UI.Next
+WebSharper.Testing

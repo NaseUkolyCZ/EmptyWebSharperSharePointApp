@@ -1,0 +1,25 @@
+group Build
+Antlr
+AppForSharePointOnlineWebToolkit
+bootstrap
+FSharp.Core
+jQuery
+jQuery.Validation
+Microsoft.AspNet.Mvc
+Microsoft.AspNet.Razor
+Microsoft.AspNet.Web.Optimization
+Microsoft.AspNet.WebPages
+Microsoft.CodeDom.Providers.DotNetCompilerPlatform
+Microsoft.jQuery.Unobtrusive.Validation
+Microsoft.Net.Compilers
+Microsoft.SharePointOnline.CSOM
+Microsoft.Web.Infrastructure
+Modernizr
+Newtonsoft.Json
+Respond
+WebGrease
+WebSharper
+WebSharper.AspNetMvc
+WebSharper.Testing
+
+
