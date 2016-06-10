@@ -43,6 +43,7 @@ module Templating =
 
 module Site =
     open WebSharper.UI.Next.Html
+    open Microsoft.SharePoint.Client
 
     let SharePointContextUser () =
         let spContext = SharePointContextProvider.Current.GetSharePointContext(HttpContext.Current)
@@ -55,9 +56,20 @@ module Site =
         clientContext.ExecuteQuery();
         spUser
 
+    let getSomeData () =
+        let spContext = SharePointContextProvider.Current.GetSharePointContext(HttpContext.Current)
+        use clientContext = spContext.CreateUserClientContextForSPHost()
+        let web = clientContext.Web
+        clientContext.Load(web)
+        clientContext.ExecuteQuery();
+        let lists = web.Lists
+        clientContext.Load<ListCollection>(lists)
+        clientContext.ExecuteQuery();
+        lists
+
     let HomePage ctx =
         Templating.Main ctx EndPoint.Home "Home" [
-            h1 [text (sprintf "%s, say hi to the server!" (SharePointContextUser().Title) ) ]
+            h1 [text (sprintf "%s, say hi to the server with %d lists!" (SharePointContextUser().Title) (getSomeData().Count) ) ]
             div [client <@ Client.Main() @>]
         ]
 
