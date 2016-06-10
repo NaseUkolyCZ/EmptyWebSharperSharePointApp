@@ -12,7 +12,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
-    <TargetFSharpCoreVersion>4.3.0.0</TargetFSharpCoreVersion>
+    <TargetFSharpCoreVersion>4.4.0.0</TargetFSharpCoreVersion>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <TargetFrameworkProfile />
@@ -37,7 +37,7 @@
     <Name>WebSharperApplication</Name>
     <RootNamespace>WebSharperApplication</RootNamespace>
     <AssemblyName>WebSharperApplication</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <WarningLevel>3</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
@@ -115,11 +115,15 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions.dll" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.ApplicationServices.dll" />
+    <Reference Include="System.Web.DynamicData.dll" />
+    <Reference Include="System.Web.Entity.dll" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Xml.Linq.dll" />
     <Reference Include="WebSharper.Collections">
       <HintPath>..\packages\WebSharper.3.5.14.215\lib\net40\WebSharper.Collections.dll</HintPath>
       <Private>True</Private>
