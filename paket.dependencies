@@ -1,1 +1,26 @@
 source https://www.nuget.org/api/v2
+
+group Build
+  source https://nuget.org/api/v2
+
+  nuget Antlr
+  nuget AppForSharePointOnlineWebToolkit
+  nuget bootstrap
+  nuget FSharp.Core
+  nuget jQuery
+  nuget jQuery.Validation
+  nuget Microsoft.AspNet.Mvc
+  nuget Microsoft.AspNet.Razor
+  nuget Microsoft.AspNet.Web.Optimization
+  nuget Microsoft.AspNet.WebPages
+  nuget Microsoft.CodeDom.Providers.DotNetCompilerPlatform
+  nuget Microsoft.jQuery.Unobtrusive.Validation
+  nuget Microsoft.Net.Compilers
+  nuget Microsoft.SharePointOnline.CSOM
+  nuget Microsoft.Web.Infrastructure
+  nuget Modernizr
+  nuget Newtonsoft.Json
+  nuget Respond
+  nuget WebGrease
+  nuget WebSharper
+  nuget WebSharper.AspNetMvc
