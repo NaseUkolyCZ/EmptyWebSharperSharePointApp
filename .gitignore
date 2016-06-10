@@ -196,3 +196,5 @@ FakesAssemblies/
 *.opt
 
 Scripts/WebSharper/
+packages
+.paket/paket.exe
