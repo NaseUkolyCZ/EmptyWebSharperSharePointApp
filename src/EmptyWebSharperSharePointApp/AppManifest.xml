@@ -4,7 +4,7 @@
      Name="EmptyWebSharperSharePointApp"
      ProductID="{af702564-cd53-4954-84b5-7dacd4f0c15f}"
      Version="1.0.0.0"
-     SharePointMinVersion="16.0.0.0"
+     SharePointMinVersion="15.0.0.0"
 >
   <Properties>
     <Title>EmptyWebSharperSharePointApp</Title>

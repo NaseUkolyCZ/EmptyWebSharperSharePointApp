@@ -1,4 +1,7 @@
-
+NUGET
+  remote: https://www.nuget.org/api/v2
+  specs:
+    FAKE (4.29.2)
 
 GROUP Build
 NUGET
