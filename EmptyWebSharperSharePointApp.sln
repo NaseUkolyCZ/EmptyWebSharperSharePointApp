@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmptyWebSharperSharePointApp", "src\EmptyWebSharperSharePointApp\EmptyWebSharperSharePointApp.csproj", "{567621E4-2B18-4C87-A869-B37B23376502}"
 EndProject
@@ -14,6 +14,13 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "paket", "paket", "{24F3659B-2F29-4302-92B9-B5225F294AB4}"
 	ProjectSection(SolutionItems) = preProject
 		paket.dependencies = paket.dependencies
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D00914C1-A0E7-436F-A1D5-4C0B9DBEC85B}"
+	ProjectSection(SolutionItems) = preProject
+		appveyor.yml = appveyor.yml
+		build.cmd = build.cmd
+		build.fsx = build.fsx
 	EndProjectSection
 EndProject
 Global
