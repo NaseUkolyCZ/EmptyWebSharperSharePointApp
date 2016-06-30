@@ -18,7 +18,6 @@ group Build
   nuget Microsoft.CodeDom.Providers.DotNetCompilerPlatform
   nuget Microsoft.jQuery.Unobtrusive.Validation
   nuget Microsoft.Net.Compilers
-  nuget Microsoft.SharePointOnline.CSOM
   nuget Microsoft.Web.Infrastructure
   nuget Modernizr
   nuget Newtonsoft.Json
