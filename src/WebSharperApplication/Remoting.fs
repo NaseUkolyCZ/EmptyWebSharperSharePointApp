@@ -6,7 +6,7 @@ module Server =
 
     [<Rpc>]
     let DoSomething input =
-        let R (s: string) = System.String(Array.rev(s.ToCharArray()))
+        let rev (s: string) = System.String(Array.rev(s.ToCharArray()))
         async {
-            return R input
+            return rev input
         }

@@ -1,4 +1,8 @@
-
+NUGET
+  remote: https://www.nuget.org/api/v2
+  specs:
+    FAKE (4.29.2)
+    FSharpLint (0.2.8)
 
 GROUP Build
 NUGET
